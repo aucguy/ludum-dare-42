@@ -2,17 +2,17 @@ base.registerModule('item', function() {
   var util = base.importModule('util');
   
   var DragHandler = util.extend(Object, 'DragHandler', {
-    constructor: function DragHandler(game) {
-      this.game = game;
+    constructor: function DragHandler(world) {
+      this.world = world;
       this.movingItem = null;
-      this.game.input.addMoveCallback(this.onMouseMove, this);
-      this.game.input.onUp.add(this.onMouseUp, this);
+      this.world.game.input.addMoveCallback(this.onMouseMove, this);
+      this.world.game.input.onUp.add(this.onMouseUp, this);
     },
-    createDraggable: function(game, item, point) {
+    createDraggable: function(item, point) {
       if(this.movingItem !== null) {
         this.movingItem.kill();
       }
-      this.movingItem = new MovingItem(game, this, item, point);
+      this.movingItem = new MovingItem(this.world, item, point);
       this.movingItem.onKill.add(function() {
         this.movingItem = null;
       }, this);
@@ -22,20 +22,19 @@ base.registerModule('item', function() {
         this.movingItem.onMouseMove(pointer.position);
       }
     },
-    onMouseUp: function() {
+    onMouseUp: function(pointer) {
       if(this.movingItem !== null) {
-        this.movingItem.kill();
+        this.movingItem.onMouseUp(pointer.position);
       }
     }
   });
   
   var Item = util.extend(Object, 'Item', {
-    constructor: function Item(game, dragHandler) {
-      this.game = game;
-      this.sprite = game.add.sprite(16, 16, 'image/flour'); //Phaser.Sprite
+    constructor: function Item(world, x, y) {
+      this.sprite = world.game.add.sprite(x, y, 'image/flour'); //Phaser.Sprite
       this.sprite.scale.x = 2;
       this.sprite.scale.y = 2;
-      this.dragHandler = dragHandler;
+      this.world = world;
       this.onKill = new Phaser.Signal();
     },
     containsPoint: function(point) {
@@ -49,20 +48,32 @@ base.registerModule('item', function() {
     }
   });
   
+  var CookingItem = util.extend(Item, 'CookingItem', {
+  });
+  
   var PermanentItem = util.extend(Item, 'PermanentItem', {
     onClick: function(point) {
-      this.dragHandler.createDraggable(this.game, this, point);
+      this.world.dragHandler.createDraggable(this, point);
     }
   });
   
   var MovingItem = util.extend(Item, 'MovingItem', {
-    constructor: function(game, dragHandler, item, point) {
-      this.constructor$Item(game, dragHandler);
+    constructor: function MovingItem(world, item, point) {
+      this.constructor$Item(world);
       this.offset = new Phaser.Point(point.x - item.sprite.x, point.y - item.sprite.y);
+      this.sprite.position.x = item.sprite.position.x;
+      this.sprite.position.y = item.sprite.position.y;
     },
     onMouseMove: function(position) {
       this.sprite.position.x = position.x - this.offset.x;
       this.sprite.position.y = position.y - this.offset.y;
+    },
+    onMouseUp: function(position) {
+      this.kill();
+      var zone = this.world.zones.getZone(position);
+      if(zone !== null) {
+        zone.addItem(new CookingItem(this.world, this.sprite.position.x, this.sprite.position.y));
+      }
     }
   });
   

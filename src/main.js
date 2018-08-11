@@ -21,29 +21,27 @@ base.registerModule('main', function() {
     }
   });
   
+  var World = util.extend(Object, 'World', {
+    constructor: function World(game) {
+      this.game = game;
+      this.dragHandler = new item.DragHandler(this);
+      this.zones = new zone.ZoneContainer(this);
+    }
+  });
+  
   var PlayState = util.extend(Phaser.State, 'PlayState', {
     constructor: function PlayState() {
       this.constructor$State();
-      this.zones = null;
       this.dragHandler = null;
     },
     create: function() {
-      this.dragHandler = new item.DragHandler(this.game);
-      this.zones = this.createZones();
+      this.world = new World(this.game);
       this.input.onDown.add(this.onClick, this);
     },
-    createZones: function() {
-      return [new zone.PermanentZone(this.game, new Phaser.Rectangle(0, 0, 640, 480), this.dragHandler)];
-    },
     onClick: function(pointer) {
-      for(var i=0; i<this.zones.length; i++) {
-        if(this.zones[i].rect.contains(pointer.position.x, pointer.position.y)) {
-          this.zones[i].onClick(pointer.position);
-        }
-      }
+      this.world.zones.onClick(pointer.position);
     },
     update: function() {
-      
     }
   });
   
