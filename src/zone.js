@@ -32,6 +32,7 @@ base.registerModule('zone', function() {
       for(var i=0; i<this.items.length; i++) {
         if(this.items[i].containsPoint(position)) {
           this.items[i].onClick(position);
+          break;
         }
       }
     },
