@@ -1,6 +1,7 @@
 base.registerModule('zone', function() {
   var util = base.importModule('util');
   var item = base.importModule('item');
+  var ingredient = base.importModule('ingredient');
   
   var ZoneContainer = util.extend(Object, 'ZoneContainer', {
     constructor: function ZoneContainer(world) {
@@ -45,7 +46,8 @@ base.registerModule('zone', function() {
   var PermanentZone = util.extend(Zone, 'PermanentZone', {
     constructor: function PermanentZone(rect, world) {
       this.constructor$Zone(rect);
-      this.addItem(new item.PermanentItem(world, 16, 16));
+      this.addItem(new item.PermanentItem(world, 16, 16, new ingredient.Ingredient('image/flour')));
+      this.addItem(new item.PermanentItem(world, 64, 16, new ingredient.Ingredient('image/yeast')));
     }
   });
   

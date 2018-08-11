@@ -30,17 +30,19 @@ base.registerModule('item', function() {
   });
   
   var Item = util.extend(Object, 'Item', {
-    constructor: function Item(world, x, y) {
-      this.sprite = world.game.add.sprite(x, y, 'image/flour'); //Phaser.Sprite
+    constructor: function Item(world, x, y, ingredient) {
+      this.sprite = world.game.add.sprite(x, y, ingredient.graphic);
       this.sprite.scale.x = 2;
       this.sprite.scale.y = 2;
       this.world = world;
+      this.ingredient = ingredient;
       this.whenKill = new Phaser.Signal();
     },
     containsPoint: function(point) {
       return this.sprite.getBounds().contains(point.x, point.y);
     },
     onClick: function() {
+      //abstract
     },
     kill: function() {
       this.sprite.kill();
@@ -49,6 +51,9 @@ base.registerModule('item', function() {
   });
   
   var PermanentItem = util.extend(Item, 'PermanentItem', {
+    constructor: function PermanentItem(world, x, y, ingredient) {
+      this.constructor$Item(world, x, y, ingredient);
+    },
     onClick: function(point) {
       var moving = new MovingPermanentItem(this.world, this, point);
       this.world.dragHandler.createDraggable(moving);
@@ -56,8 +61,8 @@ base.registerModule('item', function() {
   });
   
   var CookingItem = util.extend(Item, 'CookingItem', {
-    constructor: function CookingItem(world, x, y) {
-      this.constructor$Item(world, x, y);
+    constructor: function CookingItem(world, x, y, ingredient) {
+      this.constructor$Item(world, x, y, ingredient);
     },
     onClick: function(point) {
       var moving = new MovingCookingItem(this.world, this, point)
@@ -68,10 +73,8 @@ base.registerModule('item', function() {
   
   var MovingItem = util.extend(Item, 'MovingItem', {
     constructor: function MovingItem(world, item, point) {
-      this.constructor$Item(world);
+      this.constructor$Item(world, item.sprite.position.x, item.sprite.position.y, item.ingredient);
       this.offset = new Phaser.Point(point.x - item.sprite.x, point.y - item.sprite.y);
-      this.sprite.position.x = item.sprite.position.x;
-      this.sprite.position.y = item.sprite.position.y;
       this.whenUsed = new Phaser.Signal();
     },
     onMouseMove: function(position) {
@@ -95,7 +98,7 @@ base.registerModule('item', function() {
       this.constructor$MovingItem(world, item, point);
     },
     tryPlace: function(zone) {
-      zone.addItem(new CookingItem(this.world, this.sprite.position.x, this.sprite.position.y));
+      zone.addItem(new CookingItem(this.world, this.sprite.position.x, this.sprite.position.y, this.ingredient));
     }
   });
   
