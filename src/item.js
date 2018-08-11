@@ -8,11 +8,11 @@ base.registerModule('item', function() {
       this.world.game.input.addMoveCallback(this.onMouseMove, this);
       this.world.game.input.onUp.add(this.onMouseUp, this);
     },
-    createDraggable: function(item, point) {
+    createDraggable: function(moving) {
       if(this.movingItem !== null) {
         this.movingItem.kill();
       }
-      this.movingItem = new MovingItem(this.world, item, point);
+      this.movingItem = moving;
       this.movingItem.whenKill.add(function() {
         this.movingItem = null;
       }, this);
@@ -48,15 +48,21 @@ base.registerModule('item', function() {
     }
   });
   
-  var CookingItem = util.extend(Item, 'CookingItem', {
-    constructor: function CookingItem(world, x, y) {
-      this.constructor$Item(world, x, y);
+  var PermanentItem = util.extend(Item, 'PermanentItem', {
+    onClick: function(point) {
+      var moving = new MovingPermanentItem(this.world, this, point);
+      this.world.dragHandler.createDraggable(moving);
     }
   });
   
-  var PermanentItem = util.extend(Item, 'PermanentItem', {
+  var CookingItem = util.extend(Item, 'CookingItem', {
+    constructor: function CookingItem(world, x, y) {
+      this.constructor$Item(world, x, y);
+    },
     onClick: function(point) {
-      this.world.dragHandler.createDraggable(this, point);
+      var moving = new MovingCookingItem(this.world, this, point)
+      this.world.dragHandler.createDraggable(moving);
+      this.sprite.alpha = 0.5;
     }
   });
   
@@ -66,6 +72,7 @@ base.registerModule('item', function() {
       this.offset = new Phaser.Point(point.x - item.sprite.x, point.y - item.sprite.y);
       this.sprite.position.x = item.sprite.position.x;
       this.sprite.position.y = item.sprite.position.y;
+      this.whenUsed = new Phaser.Signal();
     },
     onMouseMove: function(position) {
       this.sprite.position.x = position.x - this.offset.x;
@@ -75,8 +82,32 @@ base.registerModule('item', function() {
       this.kill();
       var zone = this.world.zones.getZone(position);
       if(zone !== null) {
-        zone.addItem(new CookingItem(this.world, this.sprite.position.x, this.sprite.position.y));
+        this.tryPlace(zone);
       }
+    },
+    tryPlace: function(zone) {
+      //abstract
+    }
+  });
+  
+  var MovingPermanentItem = util.extend(MovingItem, 'MovingPermanentItem', {
+    constructor: function MovingPermanentItem(world, item, point) {
+      this.constructor$MovingItem(world, item, point);
+    },
+    tryPlace: function(zone) {
+      zone.addItem(new CookingItem(this.world, this.sprite.position.x, this.sprite.position.y));
+    }
+  });
+  
+  var MovingCookingItem = util.extend(MovingItem, 'MovingCookingItem', {
+    constructor: function MovingCookingItem(world, item, point) {
+      this.constructor$MovingItem(world, item, point);
+      this.item = item;
+    },
+    tryPlace: function(zone) {
+      this.item.sprite.alpha = 1;
+      this.item.sprite.position.x = this.sprite.position.x;
+      this.item.sprite.position.y = this.sprite.position.y;
     }
   });
   
