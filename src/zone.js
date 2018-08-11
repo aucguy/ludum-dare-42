@@ -3,7 +3,7 @@ base.registerModule('zone', function() {
   var item = base.importModule('item');
   var ingredient = base.importModule('ingredient');
   
-  var ZONE_BORDERS = false; //for debugging
+  var ZONE_BORDERS = true; //for debugging
   
   var ZoneContainer = util.extend(Object, 'ZoneContainer', {
     constructor: function ZoneContainer(world) {
@@ -20,7 +20,7 @@ base.registerModule('zone', function() {
       if(ZONE_BORDERS) {
         var bitmap = this.world.game.add.bitmapData(this.world.game.width, this.world.game.height);
         bitmap.context.save();
-        bitmap.context.strokeStyle = '#FF0000';
+        bitmap.context.strokeStyle = '#FFFFFF';
         bitmap.context.lineWidth = 5;
         for(var i=0; i<this.children.length; i++) {
           var rect = this.children[i].rect;
@@ -45,6 +45,11 @@ base.registerModule('zone', function() {
       var zone = this.getZone(position);
       if(zone !== null) {
         return zone.onClick(position);
+      }
+    },
+    update: function() {
+      for(var i=0; i<this.children.length; i++) {
+        this.children[i].update();
       }
     }
   });
@@ -78,8 +83,9 @@ base.registerModule('zone', function() {
       }, this);
       item.zone = this;
     },
-    removeItem: function(item) {
+    removeItem: function() {
       this.items.splice(this.items.indexOf(item), 1);
+      this.zone = null;
     },
     canPlaceItem: function(draggable) {
       //items can't straddle borders
@@ -93,6 +99,29 @@ base.registerModule('zone', function() {
         }
       }
       return true;
+    },
+    update: function() {
+      //abstract
+    }
+  });
+  
+  var PermanentZone = util.extend(Zone, 'PermanentZone', {
+    constructor: function PermanentZone(rect) {
+      this.constructor$Zone(rect);
+    },
+    canPlaceItem: function(item) {
+      return false;
+    }
+  });
+  
+  var GarbageZone = util.extend(Zone, 'GarbageZone', {
+    constructor: function GarbageZone(rect) {
+      this.constructor$Zone(rect);
+    },
+    update: function() {
+      while(this.items.length !== 0) {
+        this.items[0].kill();
+      }
     }
   });
   
@@ -101,7 +130,7 @@ base.registerModule('zone', function() {
   }
   
   function constructPermanentZone(world, zoneData) {
-    var zone = constructZone(world, zoneData);
+    var zone = new PermanentZone(new Phaser.Rectangle(zoneData.left, zoneData.top, zoneData.width, zoneData.height));
     if(zoneData.items) {
       for(var i=0; i<zoneData.items.length; i++) {
         var itemData = zoneData.items[i];
@@ -111,13 +140,18 @@ base.registerModule('zone', function() {
     return zone;
   }
   
+  function constructGarbageZone(world, zoneData) {
+    return new GarbageZone(new Phaser.Rectangle(zoneData.left, zoneData.top, zoneData.width, zoneData.height));
+  }
+  
   var ZONE_CONSTRUCTORS = {
     order: constructZone,
     counter: constructZone,
     ingredient: constructPermanentZone,
     stove: constructZone,
     oven: constructZone,
-    warm: constructZone
+    warm: constructZone,
+    garbage: constructGarbageZone
   }
   
   return {

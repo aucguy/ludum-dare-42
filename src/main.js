@@ -27,6 +27,9 @@ base.registerModule('main', function() {
       this.dragHandler = new item.DragHandler(this);
       this.zones = new zone.ZoneContainer(this);
       this.zones.createZones(base.getAsset('config/zones'))
+    },
+    update: function() {
+      this.zones.update();
     }
   });
   
@@ -43,6 +46,7 @@ base.registerModule('main', function() {
       this.world.zones.onClick(pointer.position);
     },
     update: function() {
+      this.world.update();
     }
   });
   

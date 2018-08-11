@@ -49,6 +49,9 @@ base.registerModule('item', function() {
     kill: function() {
       this.sprite.kill();
       this.whenKill.dispatch();
+      if(this.zone !== null) {
+        this.zone.removeItem(this);
+      }
     },
     canBeMixed: function() {
       return false;

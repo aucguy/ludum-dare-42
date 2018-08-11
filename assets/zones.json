@@ -19,7 +19,7 @@
             "left": 545,
             "top": 80,
             "width": 95,
-            "height": 560,
+            "height": 320,
             "items": [
                 {
                     "graphic": "image/flour",
@@ -53,6 +53,13 @@
             "top": 80,
             "width": 265,
             "height": 105
+        },
+        {
+            "type": "garbage",
+            "left": 545,
+            "top": 400,
+            "width": 95,
+            "height": 80
         }
     ]
 }

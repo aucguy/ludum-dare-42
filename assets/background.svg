@@ -26,7 +26,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
-     inkscape:cx="388.99325"
+     inkscape:cx="372.83081"
      inkscape:cy="232.5473"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
@@ -85,12 +85,12 @@
        y="190.89398"
        inkscape:label="#rect4487" />
     <rect
-       style="opacity:1;fill:#082f04;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.79374999;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:3.175, 1.5875;stroke-dashoffset:0;stroke-opacity:1"
+       style="opacity:1;fill:#082f04;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.70865303;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:2.83461236, 1.41730617;stroke-dashoffset:0;stroke-opacity:1"
        id="ingredientsArea"
-       width="23.938705"
-       height="106.10601"
-       x="144.99774"
-       y="190.89398"
+       width="24.023804"
+       height="84.275009"
+       x="144.9552"
+       y="190.85144"
        inkscape:label="#rect4489" />
     <rect
        style="opacity:1;fill:#1d1d1d;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.9885534;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:3.95421355, 1.97710678;stroke-dashoffset:0;stroke-opacity:1"
@@ -182,5 +182,12 @@
        d="M 35.012307,226.7081 H 70.024612"
        id="path4566-9-2-2-8-6-5"
        inkscape:connector-curvature="0" />
+    <rect
+       style="opacity:1;fill:#ff0023;fill-opacity:1;fill-rule:nonzero;stroke:#bcb800;stroke-width:0.4004499;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect4508"
+       width="24.866755"
+       height="22.053072"
+       x="145.04893"
+       y="275.681" />
   </g>
 </svg>
