@@ -49,6 +49,9 @@ base.registerModule('item', function() {
   });
   
   var CookingItem = util.extend(Item, 'CookingItem', {
+    constructor: function CookingItem(world, x, y) {
+      this.constructor$Item(world, x, y);
+    }
   });
   
   var PermanentItem = util.extend(Item, 'PermanentItem', {
