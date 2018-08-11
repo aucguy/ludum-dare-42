@@ -1,0 +1,2 @@
+base.registerModule('ingredients', function() {
+});

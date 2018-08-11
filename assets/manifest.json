@@ -1,0 +1,16 @@
+{
+    "items": [
+        ["image/play", "assets/play.svg", "image"],
+        ["image/cheese", "assets/cheese.svg", "image"],
+        ["image/flour", "assets/flour.svg", "image"],
+        ["image/oil", "assets/oil.svg", "image"],
+        ["image/pepper", "assets/pepper.svg", "image"],
+        ["image/salt", "assets/salt.svg", "image"],
+        ["image/tomato", "assets/tomato.svg", "image"],
+        ["image/water", "assets/water.svg", "image"],
+        ["image/yeast", "assets/yeast.svg", "image"],
+        ["image/bowl", "assets/bowl.svg", "image"],
+        ["image/pot", "assets/pot.svg", "image"],
+        ["image/strainer", "assets/strainer.svg", "image"]
+    ]
+}

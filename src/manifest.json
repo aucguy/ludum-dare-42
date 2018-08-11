@@ -1,0 +1,8 @@
+{
+    "items": [
+        ["scripts/main", "src/main.js", "script"],
+        ["scripts/ingredient", "src/ingredient.js", "script"],
+        ["scripts/item", "src/item.js", "script"],
+        ["scripts/zone", "src/zone.js", "script"]
+    ]
+}
