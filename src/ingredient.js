@@ -7,7 +7,17 @@ base.registerModule('ingredient', function() {
     }
   });
   
+  function mix(a, b) {
+    if(a.graphic === 'image/flour' && b.graphic === 'image/yeast' ||
+      b.graphic === 'image/flour' && a.graphic === 'image/yeast') {
+      return new Ingredient('image/water');
+    } else {
+      return null;
+    }
+  }
+  
   return {
-    Ingredient: Ingredient
+    Ingredient: Ingredient,
+    mix: mix
   };
 });

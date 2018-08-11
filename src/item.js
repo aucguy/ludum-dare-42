@@ -1,5 +1,6 @@
 base.registerModule('item', function() {
   var util = base.importModule('util');
+  var ingredient = base.importModule('ingredient');
   
   var DragHandler = util.extend(Object, 'DragHandler', {
     constructor: function DragHandler(world) {
@@ -47,6 +48,15 @@ base.registerModule('item', function() {
     kill: function() {
       this.sprite.kill();
       this.whenKill.dispatch();
+    },
+    canBeMixed: function() {
+      return false;
+    },
+    onMixed: function() {
+      //abstract
+    },
+    onMoveFail: function() {
+      //abstract
     }
   });
   
@@ -68,6 +78,15 @@ base.registerModule('item', function() {
       var moving = new MovingCookingItem(this.world, this, point)
       this.world.dragHandler.createDraggable(moving);
       this.sprite.alpha = 0.5;
+    },
+    canBeMixed: function() {
+      return true;
+    },
+    onMixed: function() {
+      this.kill();
+    },
+    onMoveFail: function() {
+      this.sprite.alpha = 1;
     }
   });
   
@@ -76,6 +95,7 @@ base.registerModule('item', function() {
       this.constructor$Item(world, item.sprite.position.x, item.sprite.position.y, item.ingredient);
       this.offset = new Phaser.Point(point.x - item.sprite.x, point.y - item.sprite.y);
       this.whenUsed = new Phaser.Signal();
+      this.underlyingItem = item;
     },
     onMouseMove: function(position) {
       this.sprite.position.x = position.x - this.offset.x;
@@ -85,7 +105,26 @@ base.registerModule('item', function() {
       this.kill();
       var zone = this.world.zones.getZone(position);
       if(zone !== null) {
-        this.tryPlace(zone);
+        var overItem = zone.getItem(position);
+        if(overItem !== null) {
+          if(overItem.canBeMixed()) {
+            var mixedIngredient = ingredient.mix(this.underlyingItem.ingredient, overItem.ingredient);
+            if(mixedIngredient !== null) {
+              var position = overItem.sprite.position;
+              this.underlyingItem.onMixed();
+              overItem.onMixed();
+              zone.addItem(new CookingItem(this.world, position.x, position.y, mixedIngredient));
+            } else {
+              this.underlyingItem.onMoveFail();
+            }
+          } else {
+            this.underlyingItem.onMoveFail();
+          }
+        } else {
+          this.tryPlace(zone);
+        }
+      } else {
+        this.underlyingItem.onMoveFail();
       }
     },
     tryPlace: function(zone) {

@@ -28,12 +28,18 @@ base.registerModule('zone', function() {
       this.rect = rect; //Phaser.Rect
       this.items = []; //[Item]
     },
-    onClick: function(position) {
-      for(var i=0; i<this.items.length; i++) {
+    getItem: function(position) {
+     for(var i=0; i<this.items.length; i++) {
         if(this.items[i].containsPoint(position)) {
-          this.items[i].onClick(position);
-          break;
+          return this.items[i];
         }
+      }
+      return null;
+    },
+    onClick: function(position) {
+      var item = this.getItem(position);
+      if(item !== null) {
+        return item.onClick(position);
       }
     },
     addItem: function(item) {
