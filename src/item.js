@@ -38,6 +38,7 @@ base.registerModule('item', function() {
       this.world = world;
       this.ingredient = ingredient;
       this.whenKill = new Phaser.Signal();
+      this.zone = null; //set by zones
     },
     containsPoint: function(point) {
       return this.sprite.getBounds().contains(point.x, point.y);
@@ -98,6 +99,7 @@ base.registerModule('item', function() {
       this.sprite.alpha = 1;
       this.sprite.position.x = draggable.sprite.position.x;
       this.sprite.position.y = draggable.sprite.position.y;
+      zone.addItem(this);
     }
   });
   

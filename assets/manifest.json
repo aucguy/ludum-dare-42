@@ -1,6 +1,6 @@
 {
     "items": [
-        ["image/play", "assets/play.svg", "image"],
+        ["image/background", "assets/background.svg", "image"],
         ["image/cheese", "assets/cheese.svg", "image"],
         ["image/flour", "assets/flour.svg", "image"],
         ["image/oil", "assets/oil.svg", "image"],
@@ -11,6 +11,8 @@
         ["image/yeast", "assets/yeast.svg", "image"],
         ["image/bowl", "assets/bowl.svg", "image"],
         ["image/pot", "assets/pot.svg", "image"],
-        ["image/strainer", "assets/strainer.svg", "image"]
+        ["image/strainer", "assets/strainer.svg", "image"],
+        
+        ["config/zones", "assets/zones.json", "json"]
     ]
 }

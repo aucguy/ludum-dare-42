@@ -15,7 +15,7 @@
    version="1.1"
    id="svg8"
    inkscape:version="0.92.1 r15371"
-   sodipodi:docname="play.svg">
+   sodipodi:docname="background.svg">
   <defs
      id="defs2" />
   <sodipodi:namedview
@@ -26,7 +26,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
-     inkscape:cx="372.83081"
+     inkscape:cx="388.99325"
      inkscape:cy="232.5473"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
@@ -59,7 +59,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -123,11 +123,12 @@
        inkscape:label="#path4495-2" />
     <rect
        style="opacity:1;fill:#1d1d1d;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.11067653;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:4.44270627, 2.22135313;stroke-dashoffset:0;stroke-opacity:1"
-       id="rect4491-7"
+       id="warmArea"
        width="69.310814"
        height="28.681824"
        x="0.15846328"
-       y="191.05244" />
+       y="191.05244"
+       inkscape:label="#rect4491-7" />
     <rect
        style="opacity:1;fill:#1d1d1d;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.9885534;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1;stroke-dasharray:3.95421359, 1.9771068;stroke-dashoffset:0;stroke-opacity:1"
        id="ovenArea"

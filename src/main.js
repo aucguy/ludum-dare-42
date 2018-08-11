@@ -26,15 +26,16 @@ base.registerModule('main', function() {
       this.game = game;
       this.dragHandler = new item.DragHandler(this);
       this.zones = new zone.ZoneContainer(this);
+      this.zones.createZones(base.getAsset('config/zones'))
     }
   });
   
   var PlayState = util.extend(Phaser.State, 'PlayState', {
     constructor: function PlayState() {
       this.constructor$State();
-      this.dragHandler = null;
     },
     create: function() {
+      this.game.add.sprite(0, 0, 'image/background');
       this.world = new World(this.game);
       this.input.onDown.add(this.onClick, this);
     },
