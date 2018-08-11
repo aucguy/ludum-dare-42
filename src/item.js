@@ -135,6 +135,8 @@ base.registerModule('item', function() {
           }
         } else if(zone.canPlaceItem(this)) {
           this.underlyingItem.place(zone, this);
+        } else {
+          this.underlyingItem.onMoveFail();
         }
       } else {
         this.underlyingItem.onMoveFail();

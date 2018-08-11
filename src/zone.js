@@ -82,6 +82,10 @@ base.registerModule('zone', function() {
       this.items.splice(this.items.indexOf(item), 1);
     },
     canPlaceItem: function(draggable) {
+      //items can't straddle borders
+      if(!this.rect.containsRect(draggable.sprite.getBounds())) {
+        return false;
+      }
       for(var i=0; i<this.items.length; i++) {
         var item = this.items[i];
         if(item !== draggable && draggable.sprite.getBounds().intersects(item.sprite.getBounds())) {
