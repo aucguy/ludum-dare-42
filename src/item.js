@@ -13,7 +13,7 @@ base.registerModule('item', function() {
         this.movingItem.kill();
       }
       this.movingItem = new MovingItem(this.world, item, point);
-      this.movingItem.onKill.add(function() {
+      this.movingItem.whenKill.add(function() {
         this.movingItem = null;
       }, this);
     },
@@ -35,7 +35,7 @@ base.registerModule('item', function() {
       this.sprite.scale.x = 2;
       this.sprite.scale.y = 2;
       this.world = world;
-      this.onKill = new Phaser.Signal();
+      this.whenKill = new Phaser.Signal();
     },
     containsPoint: function(point) {
       return this.sprite.getBounds().contains(point.x, point.y);
@@ -44,7 +44,7 @@ base.registerModule('item', function() {
     },
     kill: function() {
       this.sprite.kill();
-      this.onKill.dispatch();
+      this.whenKill.dispatch();
     }
   });
   

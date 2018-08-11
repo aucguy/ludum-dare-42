@@ -36,7 +36,7 @@ base.registerModule('zone', function() {
     },
     addItem: function(item) {
       this.items.push(item);
-      item.onKill.add(function() {
+      item.whenKill.add(function() {
         this.items.splice(this.items.indexOf(item), 1);
       }, this);
     }
