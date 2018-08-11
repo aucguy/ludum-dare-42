@@ -137,9 +137,6 @@ base.registerModule('item', function() {
       } else {
         this.underlyingItem.onMoveFail();
       }
-    },
-    tryPlace: function(zone) {
-      //abstract
     }
   });
   
