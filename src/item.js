@@ -48,10 +48,10 @@ base.registerModule('item', function() {
     },
     kill: function() {
       this.sprite.kill();
-      this.whenKill.dispatch();
       if(this.zone !== null) {
         this.zone.removeItem(this);
       }
+      this.whenKill.dispatch();
     },
     canBeMixed: function() {
       return false;

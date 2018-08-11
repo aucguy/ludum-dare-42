@@ -78,14 +78,13 @@ base.registerModule('zone', function() {
         item.zone.removeItem(item);
       }
       this.items.push(item);
-      item.whenKill.add(function() {
-        this.items.splice(this.items.indexOf(item), 1);
-      }, this);
       item.zone = this;
     },
-    removeItem: function() {
-      this.items.splice(this.items.indexOf(item), 1);
-      this.zone = null;
+    removeItem: function(item) {
+      if(this.items.indexOf(item) !== -1) {
+        this.items.splice(this.items.indexOf(item), 1);
+        item.zone = null;
+      }
     },
     canPlaceItem: function(draggable) {
       //items can't straddle borders
