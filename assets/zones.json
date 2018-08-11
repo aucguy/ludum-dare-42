@@ -22,14 +22,19 @@
             "height": 320,
             "items": [
                 {
-                    "graphic": "image/flour",
+                    "ingredientType": "flour",
                     "x": 545,
                     "y": 80
                 },
                 {
-                    "graphic": "image/yeast",
+                    "ingredientType": "yeast",
                     "x": 545,
                     "y": 150
+                },
+                {
+                    "ingredientType": "bowl",
+                    "x": 545,
+                    "y": 200
                 }
             ]
         },

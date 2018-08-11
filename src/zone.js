@@ -134,7 +134,8 @@ base.registerModule('zone', function() {
     if(zoneData.items) {
       for(var i=0; i<zoneData.items.length; i++) {
         var itemData = zoneData.items[i];
-        zone.addItem(new item.PermanentItem(world, itemData.x, itemData.y, new ingredient.Ingredient(itemData.graphic)));
+        var ingred = ingredient.fromIngredientType(itemData.ingredientType);
+        zone.addItem(new item.PermanentItem(world, itemData.x, itemData.y, ingred));
       }
     }
     return zone;
