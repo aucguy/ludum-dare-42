@@ -2,6 +2,7 @@ base.registerModule('zone', function() {
   var util = base.importModule('util');
   var item = base.importModule('item');
   var ingredient = base.importModule('ingredient');
+  var zoneType = base.importModule('zoneType');
   
   var ZONE_BORDERS = true; //for debugging
   
@@ -36,9 +37,11 @@ base.registerModule('zone', function() {
     getZone: function(position) {
       for(var i=0; i<this.children.length; i++) {
         if(this.children[i].rect.contains(position.x, position.y)) {
+          console.log(this.children[i].type.name);
           return this.children[i];
         }
       }
+      console.log('null');
       return null;
     },
     onClick: function(position) {
@@ -47,16 +50,17 @@ base.registerModule('zone', function() {
         return zone.onClick(position);
       }
     },
-    update: function() {
+    update: function(time) {
       for(var i=0; i<this.children.length; i++) {
-        this.children[i].update();
+        this.children[i].update(time);
       }
     }
   });
   
   var Zone = util.extend(Object, 'Zone', {
-    constructor: function Zone(rect) {
+    constructor: function Zone(rect, type) {
       this.rect = rect; //Phaser.Rect
+      this.type = type;
       this.items = []; //[Item]
     },
     getItem: function(position) {
@@ -99,14 +103,16 @@ base.registerModule('zone', function() {
       }
       return true;
     },
-    update: function() {
-      //abstract
+    update: function(time) {
+      for(var i=0; i<this.items.length; i++) {
+        this.items[i].update(time);
+      }
     }
   });
   
   var PermanentZone = util.extend(Zone, 'PermanentZone', {
     constructor: function PermanentZone(rect) {
-      this.constructor$Zone(rect);
+      this.constructor$Zone(rect, zoneType.ZONE_TYPES.INGREDIENTS);
     },
     canPlaceItem: function(item) {
       return false;
@@ -115,25 +121,28 @@ base.registerModule('zone', function() {
   
   var GarbageZone = util.extend(Zone, 'GarbageZone', {
     constructor: function GarbageZone(rect) {
-      this.constructor$Zone(rect);
+      this.constructor$Zone(rect, zoneType.ZONE_TYPES.GARBAGE);
     },
     update: function() {
+      this.update$Zone();
       while(this.items.length !== 0) {
         this.items[0].kill();
       }
     }
   });
   
-  function constructZone(world, zoneData) {
-    return new Zone(new Phaser.Rectangle(zoneData.left, zoneData.top, zoneData.width, zoneData.height));
+  function createZoneConstructor(type) {
+    return function(world, zoneData) {
+      return new Zone(new Phaser.Rectangle(zoneData.left, zoneData.top, zoneData.width, zoneData.height), type);
+    };
   }
-  
+
   function constructPermanentZone(world, zoneData) {
     var zone = new PermanentZone(new Phaser.Rectangle(zoneData.left, zoneData.top, zoneData.width, zoneData.height));
     if(zoneData.items) {
       for(var i=0; i<zoneData.items.length; i++) {
         var itemData = zoneData.items[i];
-        var ingred = ingredient.fromIngredientType(itemData.ingredientType);
+        var ingred = new ingredient.Ingredient(world, ingredient.INGREDIENT_TYPES[itemData.ingredientType.toUpperCase()]);
         zone.addItem(new item.PermanentItem(world, itemData.x, itemData.y, ingred));
       }
     }
@@ -145,12 +154,12 @@ base.registerModule('zone', function() {
   }
   
   var ZONE_CONSTRUCTORS = {
-    order: constructZone,
-    counter: constructZone,
+    order: createZoneConstructor(zoneType.ZONE_TYPES.ORDER),
+    counter: createZoneConstructor(zoneType.ZONE_TYPES.COUNTER),
     ingredient: constructPermanentZone,
-    stove: constructZone,
-    oven: constructZone,
-    warm: constructZone,
+    stove: createZoneConstructor(zoneType.ZONE_TYPES.STOVE),
+    oven: createZoneConstructor(zoneType.ZONE_TYPES.OVEN),
+    warm: createZoneConstructor(zoneType.ZONE_TYPES.WARM),
     garbage: constructGarbageZone
   }
   

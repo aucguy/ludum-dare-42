@@ -4,6 +4,8 @@
         ["scripts/ingredient", "src/ingredient.js", "script"],
         ["scripts/item", "src/item.js", "script"],
         ["scripts/zone", "src/zone.js", "script"],
-        ["scripts/ingredient", "src/ingredient.js", "script"]
+        ["scripts/ingredient", "src/ingredient.js", "script"],
+        ["scripts/component", "src/component.js", "script"],
+        ["scripts/zoneType", "src/zoneType.js", "script"]
     ]
 }

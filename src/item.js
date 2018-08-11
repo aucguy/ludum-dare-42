@@ -39,6 +39,7 @@ base.registerModule('item', function() {
       this.ingredient = ingredient;
       this.whenKill = new Phaser.Signal();
       this.zone = null; //set by zones
+      ingredient.item = this;
     },
     containsPoint: function(point) {
       return this.sprite.getBounds().contains(point.x, point.y);
@@ -52,6 +53,7 @@ base.registerModule('item', function() {
         this.zone.removeItem(this);
       }
       this.whenKill.dispatch();
+      this.ingredient.kill();
     },
     canBeMixed: function() {
       return false;
@@ -64,6 +66,9 @@ base.registerModule('item', function() {
     },
     place: function(zone, draggable) {
       //abstract
+    },
+    update: function(time) {
+      this.ingredient.update(time);
     }
   });
   
@@ -76,7 +81,8 @@ base.registerModule('item', function() {
       this.world.dragHandler.createDraggable(moving);
     },
     place: function(zone, draggable) {
-      zone.addItem(new CookingItem(this.world, draggable.sprite.position.x, draggable.sprite.position.y, this.ingredient));
+      var ingred = ingredient.toCookingIngredient(this.world, this.ingredient);
+      zone.addItem(new CookingItem(this.world, draggable.sprite.position.x, draggable.sprite.position.y, ingred));
     }
   });
   
@@ -108,7 +114,8 @@ base.registerModule('item', function() {
   
   var MovingItem = util.extend(Item, 'MovingItem', {
     constructor: function MovingItem(world, item, point) {
-      this.constructor$Item(world, item.sprite.position.x, item.sprite.position.y, item.ingredient);
+      var ingred = ingredient.toMovingIngredient(world, item.ingredient);
+      this.constructor$Item(world, item.sprite.position.x, item.sprite.position.y, ingred);
       this.offset = new Phaser.Point(point.x - item.sprite.x, point.y - item.sprite.y);
       this.whenUsed = new Phaser.Signal();
       this.underlyingItem = item;

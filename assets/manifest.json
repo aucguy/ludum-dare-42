@@ -13,6 +13,9 @@
         ["image/pot", "assets/pot.svg", "image"],
         ["image/strainer", "assets/strainer.svg", "image"],
         
+        ["image/cookBar", "assets/cookBar.svg", "image"],
+        ["image/cookArrow", "assets/cookArrow.svg", "image"],
+        
         ["config/zones", "assets/zones.json", "json"]
     ]
 }

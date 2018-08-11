@@ -1,5 +1,6 @@
 base.registerModule('ingredient', function() {
   var util = base.importModule('util');
+  var component = base.importModule('component');
   
   var IngredientType = util.extend(Object, 'IngredientType', {
     constructor: function IngredientType(graphic) {
@@ -11,15 +12,32 @@ base.registerModule('ingredient', function() {
     WATER: new IngredientType('image/water'),
     FLOUR: new IngredientType('image/flour'),
     YEAST: new IngredientType('image/yeast'),
-    BOWL: new IngredientType(null),
-  }
+    BOWL: new IngredientType('image/bowl'),
+  };
   
   var Ingredient = util.extend(Object, 'Ingredient', {
-    constructor: function Ingredient(type) {
+    constructor: function Ingredient(world, type) {
+      this.world = world;
       this.type = type;
+      this.components = [];
+      this.item = null;
     },
     getGraphic: function() {
       return this.type.graphic;
+    },
+    addComponent: function(component) {
+      this.components.push(component);
+      component.ingredient = this;
+    },
+    update: function(time) {
+      for(var i=0; i<this.components.length; i++) {
+        this.components[i].update(time);
+      }
+    },
+    kill: function() {
+      for(var i=0; i<this.components.length; i++) {
+        this.components[i].kill();
+      }
     }
   });
   
@@ -49,10 +67,11 @@ base.registerModule('ingredient', function() {
   var MAX_BOWL_AMOUNT = 3;
   
   var Bowl = util.extend(Ingredient, 'Bowl', {
-    constructor: function Bowl(bowlType, contents) {
-      this.constructor$Ingredient(INGREDIENT_TYPES.BOWL);
+    constructor: function Bowl(world, bowlType, contents) {
+      this.constructor$Ingredient(world, INGREDIENT_TYPES.BOWL);
       this.bowlType = bowlType;
       this.contents = contents;
+      this.addComponent(new component.CookedComponent(world));
     },
     canAddIngredient: function(other) {
       //if empty, you can put in whatever
@@ -84,7 +103,7 @@ base.registerModule('ingredient', function() {
       } else {
         bowlType = this.bowlType;
       }
-      return new Bowl(bowlType, newContents);
+      return new Bowl(this.world, bowlType, newContents);
     },
     getGraphic: function() {
       return this.bowlType.graphic;
@@ -109,17 +128,23 @@ base.registerModule('ingredient', function() {
     }
   }
   
-  function fromIngredientType(name) {
-    if(name === 'bowl') {
-      return new Bowl(BOWL_TYPES.EMPTY, new util.Map());
+  function toCookingIngredient(world, original) {
+    if(original.type === INGREDIENT_TYPES.BOWL) {
+      return new Bowl(world, BOWL_TYPES.EMPTY, new util.Map());
     } else {
-      return new Ingredient(INGREDIENT_TYPES[name.toUpperCase()]);
+      return new Ingredient(world, original.type);
     }
   }
   
+  function toMovingIngredient(world, original) {
+    return new Ingredient(world, original.type);
+  }
+  
   return {
+    INGREDIENT_TYPES: INGREDIENT_TYPES,
     Ingredient: Ingredient,
     mix: mix,
-    fromIngredientType: fromIngredientType
+    toCookingIngredient: toCookingIngredient,
+    toMovingIngredient: toMovingIngredient
   };
 });
