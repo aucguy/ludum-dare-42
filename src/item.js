@@ -57,6 +57,9 @@ base.registerModule('item', function() {
     },
     onMoveFail: function() {
       //abstract
+    },
+    place: function(zone, draggable) {
+      //abstract
     }
   });
   
@@ -65,8 +68,11 @@ base.registerModule('item', function() {
       this.constructor$Item(world, x, y, ingredient);
     },
     onClick: function(point) {
-      var moving = new MovingPermanentItem(this.world, this, point);
+      var moving = new MovingItem(this.world, this, point);
       this.world.dragHandler.createDraggable(moving);
+    },
+    place: function(zone, draggable) {
+      zone.addItem(new CookingItem(this.world, draggable.sprite.position.x, draggable.sprite.position.y, this.ingredient));
     }
   });
   
@@ -75,7 +81,7 @@ base.registerModule('item', function() {
       this.constructor$Item(world, x, y, ingredient);
     },
     onClick: function(point) {
-      var moving = new MovingCookingItem(this.world, this, point)
+      var moving = new MovingItem(this.world, this, point)
       this.world.dragHandler.createDraggable(moving);
       this.sprite.alpha = 0.5;
     },
@@ -87,6 +93,11 @@ base.registerModule('item', function() {
     },
     onMoveFail: function() {
       this.sprite.alpha = 1;
+    },
+    place: function(zone, draggable) {
+      this.sprite.alpha = 1;
+      this.sprite.position.x = draggable.sprite.position.x;
+      this.sprite.position.y = draggable.sprite.position.y;
     }
   });
   
@@ -120,8 +131,8 @@ base.registerModule('item', function() {
           } else {
             this.underlyingItem.onMoveFail();
           }
-        } else {
-          this.tryPlace(zone);
+        } else if(zone.canPlaceItem(this)) {
+          this.underlyingItem.place(zone, this);
         }
       } else {
         this.underlyingItem.onMoveFail();
@@ -129,27 +140,6 @@ base.registerModule('item', function() {
     },
     tryPlace: function(zone) {
       //abstract
-    }
-  });
-  
-  var MovingPermanentItem = util.extend(MovingItem, 'MovingPermanentItem', {
-    constructor: function MovingPermanentItem(world, item, point) {
-      this.constructor$MovingItem(world, item, point);
-    },
-    tryPlace: function(zone) {
-      zone.addItem(new CookingItem(this.world, this.sprite.position.x, this.sprite.position.y, this.ingredient));
-    }
-  });
-  
-  var MovingCookingItem = util.extend(MovingItem, 'MovingCookingItem', {
-    constructor: function MovingCookingItem(world, item, point) {
-      this.constructor$MovingItem(world, item, point);
-      this.item = item;
-    },
-    tryPlace: function(zone) {
-      this.item.sprite.alpha = 1;
-      this.item.sprite.position.x = this.sprite.position.x;
-      this.item.sprite.position.y = this.sprite.position.y;
     }
   });
   

@@ -47,6 +47,15 @@ base.registerModule('zone', function() {
       item.whenKill.add(function() {
         this.items.splice(this.items.indexOf(item), 1);
       }, this);
+    },
+    canPlaceItem: function(draggable) {
+      for(var i=0; i<this.items.length; i++) {
+        var item = this.items[i];
+        if(item !== draggable && draggable.sprite.getBounds().intersects(item.sprite.getBounds())) {
+          return false;
+        }
+      }
+      return true;
     }
   });
   
