@@ -3,10 +3,9 @@ base.registerModule('component', function() {
   var util = base.importModule('util');
   
   var IngredientComponent = util.extend(Object, 'IngredientComponent',{
-    constructor: function IngredientComponent() {
-    },
-    clone: function() {
-      //abstract
+    constructor: function IngredientComponent(world) {
+      this.world = world;
+      this.ingredient = null;
     },
     update: function(time) {
       //abstract
@@ -20,11 +19,10 @@ base.registerModule('component', function() {
   
   var CookedComponent = util.extend(IngredientComponent, 'CookedComponent', {
     constructor: function CookedComponent(world) {
-      this.world = world;
+      this.constructor$IngredientComponent(world);
       this.cookTime = 0;
       this.barSprite = world.game.add.sprite(0, 0, 'image/cookBar');
       this.arrowSprite = world.game.add.sprite(0, 0, 'image/cookArrow');
-      this.ingredient = null;
     },
     clone: function() {
       var component = new CookedComponent(this.world);
@@ -48,10 +46,43 @@ base.registerModule('component', function() {
     },
     kill: function() {
       this.barSprite.kill();
+      this.arrowSprite.kill();
+    }
+  });
+  
+  var CompleteComponent = util.extend(IngredientComponent, 'CompleteComponent', {
+    constructor: function CompleteComponent(world) {
+      this.constructor$IngredientComponent(world);
+      this.sprite = world.game.add.sprite(0, 0, 'image/complete');
+      this.sprite.visible = true;
+    },
+    update: function(time) {
+      this.sprite.position.x = this.ingredient.item.sprite.getBounds().right - this.sprite.getBounds().width;
+      this.sprite.position.y = this.ingredient.item.sprite.position.y;
+      
+      this.sprite.visible = this.shouldBeVisible();
+    },
+    shouldBeVisible: function() {
+      var allowed = this.ingredient.bowlType.allowed;
+      var contents = this.ingredient.contents;
+
+      if(allowed === null) {
+        return false;
+      }
+      for(var i=0; i<allowed.length; i++) {
+        if(!contents.contains(allowed[i]) || contents.get(allowed[i]) === 0) {
+          return false;
+        }
+      }
+      return true;
+    },
+    kill: function() {
+      this.sprite.kill();
     }
   });
   
   return {
-    CookedComponent: CookedComponent
+    CookedComponent: CookedComponent,
+    CompleteComponent: CompleteComponent
   }
 });

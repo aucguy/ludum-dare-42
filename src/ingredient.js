@@ -12,6 +12,8 @@ base.registerModule('ingredient', function() {
     WATER: new IngredientType('image/water'),
     FLOUR: new IngredientType('image/flour'),
     YEAST: new IngredientType('image/yeast'),
+    TOMATO: new IngredientType('image/tomato'),
+    POT: new IngredientType('image/pot'),
     BOWL: new IngredientType('image/bowl'),
   };
   
@@ -50,7 +52,7 @@ base.registerModule('ingredient', function() {
   
   var BOWL_TYPES = {
     EMPTY: new BowlType('image/bowl', null),
-    DOUGH: new BowlType('image/pepper', [INGREDIENT_TYPES.WATER, INGREDIENT_TYPES.FLOUR, INGREDIENT_TYPES.YEAST])
+    DOUGH: new BowlType('image/doughBowl', [INGREDIENT_TYPES.WATER, INGREDIENT_TYPES.FLOUR, INGREDIENT_TYPES.YEAST])
   };
   
   function getBowlTypeForIngredient(ingredient) {
@@ -64,7 +66,7 @@ base.registerModule('ingredient', function() {
     return null;
   }
   
-  var MAX_BOWL_AMOUNT = 3;
+  var MAX_BOWL_AMOUNT = 1;
   
   var Bowl = util.extend(Ingredient, 'Bowl', {
     constructor: function Bowl(world, bowlType, contents) {
@@ -72,6 +74,7 @@ base.registerModule('ingredient', function() {
       this.bowlType = bowlType;
       this.contents = contents;
       this.addComponent(new component.CookedComponent(world));
+      this.addComponent(new component.CompleteComponent(world));
     },
     canAddIngredient: function(other) {
       //if empty, you can put in whatever

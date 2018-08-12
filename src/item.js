@@ -33,8 +33,8 @@ base.registerModule('item', function() {
   var Item = util.extend(Object, 'Item', {
     constructor: function Item(world, x, y, ingredient) {
       this.sprite = world.game.add.sprite(x, y, ingredient.getGraphic());
-      this.sprite.scale.x = 3;
-      this.sprite.scale.y = 3;
+      //this.sprite.scale.x = 3;
+      //this.sprite.scale.y = 3;
       this.world = world;
       this.ingredient = ingredient;
       this.whenKill = new Phaser.Signal();

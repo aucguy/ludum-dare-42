@@ -37,7 +37,6 @@ base.registerModule('zone', function() {
     getZone: function(position) {
       for(var i=0; i<this.children.length; i++) {
         if(this.children[i].rect.contains(position.x, position.y)) {
-          console.log(this.children[i].type.name);
           return this.children[i];
         }
       }
