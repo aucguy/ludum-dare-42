@@ -92,8 +92,39 @@ base.registerModule('component', function() {
     }
   });
   
+  var MAX_WELLNESS = 100;
+  
+  var WellnessComponent = util.extend(IngredientComponent, 'WellnessComponent', {
+    constructor: function WellnessComponent(world, wellness) {
+      this.constructor$IngredientComponent(world);
+      this.barSprite = null;
+      this.arrowSprite = null;
+      this.wellness = wellness;
+    },
+    init: function() {
+      this.barSprite = this.world.game.add.sprite(0, 0, 'image/wellnessBar');
+      this.arrowSprite = this.world.game.add.sprite(0, 0, 'image/cookArrow');
+      this.update(0);
+    },
+    update: function() {
+      this.barSprite.position.x = this.ingredient.item.sprite.position.x;
+      this.barSprite.position.y = this.ingredient.item.sprite.getBounds().bottom - this.barSprite.getBounds().height - this.arrowSprite.getBounds().height;
+      
+      var progress = this.wellness / MAX_WELLNESS * this.barSprite.getBounds().width;
+      this.arrowSprite.position.x = this.barSprite.position.x - this.arrowSprite.getBounds().width / 2 + progress;
+      this.arrowSprite.position.y = this.barSprite.getBounds().bottom;
+    },
+    kill: function() {
+      this.barSprite.kill();
+      this.arrowSprite.kill();
+    }
+  });
+  
   return {
     CookedComponent: CookedComponent,
-    CompleteComponent: CompleteComponent
+    CompleteComponent: CompleteComponent,
+    WellnessComponent: WellnessComponent,
+    MAX_COOK_TIME: MAX_COOK_TIME,
+    MAX_WELLNESS: MAX_WELLNESS
   }
 });

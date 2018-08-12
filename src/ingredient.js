@@ -184,10 +184,20 @@ base.registerModule('ingredient', function() {
     }
   });
   
+  var SaucePizza = util.extend(Ingredient, 'SaucePizza', {
+    constructor: function SaucePizza(world, wellness) {
+      this.constructor$Ingredient(world, INGREDIENT_TYPES.SAUCE_PIZZA);
+      this.wellnessComponent = new component.WellnessComponent(world, wellness)
+      this.addComponent(this.wellnessComponent);
+    }
+  });
+  
   var Pizza = util.extend(Ingredient, 'Pizza', {
-    constructor: function Pizza(world) {
+    constructor: function Pizza(world, wellness) {
       this.constructor$Ingredient(world, INGREDIENT_TYPES.PIZZA);
       this.addComponent(new component.CookedComponent(world, zoneType.ZONE_TYPES.OVEN));
+      this.addComponent(new component.WellnessComponent(world, wellness));
+      this.originalWellness = wellness;
     },
     isComplete: function() {
       return true;
@@ -204,9 +214,9 @@ base.registerModule('ingredient', function() {
     } else if(b.type == INGREDIENT_TYPES.POT) {
       return mixContainer(b, a);
     } else if(a.type === INGREDIENT_TYPES.SAUCE_PIZZA && b.type === INGREDIENT_TYPES.CHEESE) {
-      return new Pizza(a.world);
+      return new Pizza(a.world, a.wellnessComponent.wellness);
     } else if(a.type === INGREDIENT_TYPES.CHEESE && b.type === INGREDIENT_TYPES.SAUCE_PIZZA) {
-      return new Pizza(a.world);
+      return new Pizza(a.world, b.wellnessComponent.wellness);
     } else {
       return null;
     }
@@ -223,7 +233,10 @@ base.registerModule('ingredient', function() {
     if(container.canAddIngredient(other)) {
       return container.addIngredient(other);
     } else if(canMakeSaucePizza(container, other)) {
-      return new Ingredient(container.world, INGREDIENT_TYPES.SAUCE_PIZZA);
+      var wellness1 = Math.abs(container.cookedComponent.cookTime / component.MAX_COOK_TIME  * 2 - 0.5);
+      var wellness2 = Math.abs(other.cookedComponent.cookTime / component.MAX_COOK_TIME * 2 - 0.5);
+      var wellness = (wellness1 + wellness2) / 2;
+      return new SaucePizza(container.world, wellness * component.MAX_WELLNESS);
     } else {
       return null;
     }
