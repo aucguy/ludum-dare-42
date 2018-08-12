@@ -240,8 +240,8 @@ base.registerModule('ingredient', function() {
     if(container.canAddIngredient(other)) {
       return container.addIngredient(other);
     } else if(canMakeSaucePizza(container, other)) {
-      var wellness1 = Math.abs(container.cookedComponent.cookTime / component.MAX_COOK_TIME  * 2 - 0.5);
-      var wellness2 = Math.abs(other.cookedComponent.cookTime / component.MAX_COOK_TIME * 2 - 0.5);
+      var wellness1 = 1 - 2 * Math.abs(container.cookedComponent.cookTime / component.MAX_COOK_TIME - 0.5);
+      var wellness2 = 1 - 2 * Math.abs(other.cookedComponent.cookTime / component.MAX_COOK_TIME - 0.5);
       var wellness = (wellness1 + wellness2) / 2;
       return new SaucePizza(container.world, wellness * component.MAX_WELLNESS);
     } else {
