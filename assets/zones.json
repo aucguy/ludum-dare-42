@@ -35,6 +35,16 @@
                     "ingredientType": "bowl",
                     "x": 545,
                     "y": 200
+                },
+                {
+                    "ingredientType": "tomato",
+                    "x": 545,
+                    "y": 250
+                },
+                                {
+                    "ingredientType": "pot",
+                    "x": 545,
+                    "y": 30
                 }
             ]
         },
