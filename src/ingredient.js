@@ -40,6 +40,11 @@ base.registerModule('ingredient', function() {
       for(var i=0; i<this.components.length; i++) {
         this.components[i].kill();
       }
+    },
+    init: function() {
+      for(var i=0; i<this.components.length; i++) {
+        this.components[i].init();
+      }
     }
   });
   
