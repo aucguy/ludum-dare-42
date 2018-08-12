@@ -31,7 +31,7 @@ base.registerModule('component', function() {
       return component;
     },
     update: function(time) {
-      if(this.ingredient.item.zone.type === this.cookZone) {
+      if(this.ingredient.item.zone.type === this.cookZone && this.ingredient.isComplete()) {
         this.cookTime += time;
         if(this.cookTime > MAX_COOK_TIME) {
           this.cookTime = MAX_COOK_TIME
@@ -67,9 +67,9 @@ base.registerModule('component', function() {
       this.sprite.position.x = this.ingredient.item.sprite.getBounds().right - this.sprite.getBounds().width;
       this.sprite.position.y = this.ingredient.item.sprite.position.y;
       
-      this.sprite.visible = this.shouldBeVisible();
+      this.sprite.visible = this.isComplete();
     },
-    shouldBeVisible: function() {
+    isComplete: function() {
       var allowed = this.ingredient.containerType.allowed;
       var contents = this.ingredient.contents;
 

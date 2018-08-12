@@ -15,6 +15,7 @@ base.registerModule('ingredient', function() {
     PEPPER: new IngredientType('image/pepper'),
     TOMATO: new IngredientType('image/tomato'),
     WATER: new IngredientType('image/water'),
+    SAUCE_PIZZA: new IngredientType('image/saucePizza'),
     PIZZA: new IngredientType('image/pizza'),
     YEAST: new IngredientType('image/yeast'),
     POT: new IngredientType('image/pot'),
@@ -73,12 +74,14 @@ base.registerModule('ingredient', function() {
   var MAX_CONTAINER_AMOUNT = 1;
   
   var Container = util.extend(Ingredient, 'Container', {
-    constructor: function Bowl(world, type, containerType, contents) {
+    constructor: function Container(world, type, containerType, contents) {
       this.constructor$Ingredient(world, type);
       this.containerType = containerType;
       this.contents = contents;
-      this.addComponent(new component.CookedComponent(world, this.getCookZone()));
-      this.addComponent(new component.CompleteComponent(world));
+      this.cookedComponent = new component.CookedComponent(world, this.getCookZone());
+      this.addComponent(this.cookedComponent);
+      this.completeComponent = new component.CompleteComponent(world);
+      this.addComponent(this.completeComponent);
     },
     canAddIngredient: function(other) {
       //if empty, you can put in whatever
@@ -126,6 +129,12 @@ base.registerModule('ingredient', function() {
     },
     getCookZone: function() {
       //abstract
+    },
+    getCooked: function() {
+      return this.cookedComponent.cookTime;
+    },
+    isComplete: function() {
+      return this.completeComponent.isComplete();
     }
   });
   
@@ -175,6 +184,16 @@ base.registerModule('ingredient', function() {
     }
   });
   
+  var Pizza = util.extend(Ingredient, 'Pizza', {
+    constructor: function Pizza(world) {
+      this.constructor$Ingredient(world, INGREDIENT_TYPES.PIZZA);
+      this.addComponent(new component.CookedComponent(world, zoneType.ZONE_TYPES.OVEN));
+    },
+    isComplete: function() {
+      return true;
+    }
+  });
+  
   function mix(a, b) {
     if(a.type == INGREDIENT_TYPES.BOWL) {
       return mixContainer(a, b);
@@ -184,14 +203,27 @@ base.registerModule('ingredient', function() {
       return mixContainer(a, b);
     } else if(b.type == INGREDIENT_TYPES.POT) {
       return mixContainer(b, a);
+    } else if(a.type === INGREDIENT_TYPES.SAUCE_PIZZA && b.type === INGREDIENT_TYPES.CHEESE) {
+      return new Pizza(a.world);
+    } else if(a.type === INGREDIENT_TYPES.CHEESE && b.type === INGREDIENT_TYPES.SAUCE_PIZZA) {
+      return new Pizza(a.world);
     } else {
       return null;
     }
   }
   
+  function canMakeSaucePizza(a, b) {
+    return (a.type === INGREDIENT_TYPES.BOWL && a.containerType === BOWL_TYPES.DOUGH && a.getCooked() !== 0
+      && b.type === INGREDIENT_TYPES.POT && b.containerType === POT_TYPES.SAUCE && b.getCooked() !== 0) || 
+      (b.type === INGREDIENT_TYPES.BOWL && b.containerType === BOWL_TYPES.DOUGH && b.getCooked() !== 0
+      && a.type === INGREDIENT_TYPES.POT && a.containerType === POT_TYPES.SAUCE && a.getCooked() !== 0);
+  }
+  
   function mixContainer(container, other) {
     if(container.canAddIngredient(other)) {
       return container.addIngredient(other);
+    } else if(canMakeSaucePizza(container, other)) {
+      return new Ingredient(container.world, INGREDIENT_TYPES.SAUCE_PIZZA);
     } else {
       return null;
     }

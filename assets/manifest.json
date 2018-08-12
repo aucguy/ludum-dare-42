@@ -11,10 +11,12 @@
         ["image/doughBowl", "assets/doughBowl.png", "image"],
         ["image/pot", "assets/pot.png", "image"],
         ["image/saucePot", "assets/saucePot.png", "image"],
-        ["image/pizza", "assets/pot.png", "image"],
+        ["image/saucePizza", "assets/saucePizza.png", "image"],
+        ["image/pizza", "assets/pizza.png", "image"],
         
         ["image/cookBar", "assets/cookBar.png", "image"],
         ["image/cookArrow", "assets/cookArrow.png", "image"],
+        ["image/wellnessBar", "assets/wellnessBar.png", "image"],
         ["image/complete", "assets/complete.png", "image"],
         
         ["config/zones", "assets/zones.json", "json"]
