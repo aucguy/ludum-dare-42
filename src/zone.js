@@ -40,7 +40,6 @@ base.registerModule('zone', function() {
           return this.children[i];
         }
       }
-      console.log('null');
       return null;
     },
     onClick: function(position) {

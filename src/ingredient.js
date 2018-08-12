@@ -9,10 +9,13 @@ base.registerModule('ingredient', function() {
   });
   
   var INGREDIENT_TYPES = {
-    WATER: new IngredientType('image/water'),
+    CHEESE: new IngredientType('image/cheese'),
     FLOUR: new IngredientType('image/flour'),
-    YEAST: new IngredientType('image/yeast'),
+    PEPPER: new IngredientType('image/pepper'),
     TOMATO: new IngredientType('image/tomato'),
+    WATER: new IngredientType('image/water'),
+    PIZZA: new IngredientType('image/pizza'),
+    YEAST: new IngredientType('image/yeast'),
     POT: new IngredientType('image/pot'),
     BOWL: new IngredientType('image/bowl'),
   };
