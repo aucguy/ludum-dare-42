@@ -18,11 +18,12 @@ base.registerModule('component', function() {
   var MAX_COOK_TIME = 30000; //30s
   
   var CookedComponent = util.extend(IngredientComponent, 'CookedComponent', {
-    constructor: function CookedComponent(world) {
+    constructor: function CookedComponent(world, cookZone) {
       this.constructor$IngredientComponent(world);
       this.cookTime = 0;
       this.barSprite = null;
       this.arrowSprite = null;
+      this.cookZone = cookZone;
     },
     clone: function() {
       var component = new CookedComponent(this.world);
@@ -30,7 +31,7 @@ base.registerModule('component', function() {
       return component;
     },
     update: function(time) {
-      if(this.ingredient.item.zone.type === zoneType.ZONE_TYPES.STOVE) {
+      if(this.ingredient.item.zone.type === this.cookZone) {
         this.cookTime += time;
         if(this.cookTime > MAX_COOK_TIME) {
           this.cookTime = MAX_COOK_TIME

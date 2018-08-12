@@ -1,6 +1,7 @@
 base.registerModule('ingredient', function() {
   var util = base.importModule('util');
   var component = base.importModule('component');
+  var zoneType = base.importModule('zoneType');
   
   var IngredientType = util.extend(Object, 'IngredientType', {
     constructor: function IngredientType(graphic) {
@@ -76,7 +77,7 @@ base.registerModule('ingredient', function() {
       this.constructor$Ingredient(world, type);
       this.containerType = containerType;
       this.contents = contents;
-      this.addComponent(new component.CookedComponent(world));
+      this.addComponent(new component.CookedComponent(world, this.getCookZone()));
       this.addComponent(new component.CompleteComponent(world));
     },
     canAddIngredient: function(other) {
@@ -122,6 +123,9 @@ base.registerModule('ingredient', function() {
     },
     createContainer: function(world, containerType, newContents) {
       //abstract
+    },
+    getCookZone: function() {
+      //abstract
     }
   });
   
@@ -142,6 +146,9 @@ base.registerModule('ingredient', function() {
     },
     createContainer: function(world, containerType, newContents) {
       return new Bowl(world, containerType, newContents)
+    },
+    getCookZone: function() {
+      return zoneType.ZONE_TYPES.WARM;
     }
   });
   
@@ -162,6 +169,9 @@ base.registerModule('ingredient', function() {
     },
     createContainer: function(world, containerType, newContents) {
       return new Pot(world, containerType, newContents)
+    },
+    getCookZone: function() {
+      return zoneType.ZONE_TYPES.STOVE;
     }
   });
   
