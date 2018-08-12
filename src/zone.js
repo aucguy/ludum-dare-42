@@ -129,6 +129,28 @@ base.registerModule('zone', function() {
     }
   });
   
+  var VALUE_MULTIPLIER = 10;
+  
+  var OrderZone = util.extend(Zone, 'OrderZone', {
+    constructor: function OrderZone(rect) {
+      this.constructor$Zone(rect, zoneType.ZONE_TYPES.ORDER);
+    },
+    update: function() {
+      this.update$Zone();
+      while(this.items.length !== 0) {
+        var item = this.items[0];
+        if(item.ingredient.type === ingredient.INGREDIENT_TYPES.PIZZA) {
+          var value = item.ingredient.wellnessComponent.wellness / VALUE_MULTIPLIER;
+          item.world.status.money += Math.round(value);
+        }
+        item.kill();
+      }
+    },
+    canPlaceItem: function(item) {
+      return item.ingredient.type === ingredient.INGREDIENT_TYPES.PIZZA;
+    }
+  });
+  
   function createZoneConstructor(type) {
     return function(world, zoneData) {
       return new Zone(new Phaser.Rectangle(zoneData.left, zoneData.top, zoneData.width, zoneData.height), type);
@@ -151,8 +173,12 @@ base.registerModule('zone', function() {
     return new GarbageZone(new Phaser.Rectangle(zoneData.left, zoneData.top, zoneData.width, zoneData.height));
   }
   
+  function constructOrderZone(world, zoneData) {
+    return new OrderZone(new Phaser.Rectangle(zoneData.left, zoneData.top, zoneData.width, zoneData.height));
+  }
+  
   var ZONE_CONSTRUCTORS = {
-    order: createZoneConstructor(zoneType.ZONE_TYPES.ORDER),
+    order: constructOrderZone,
     counter: createZoneConstructor(zoneType.ZONE_TYPES.COUNTER),
     ingredient: constructPermanentZone,
     stove: createZoneConstructor(zoneType.ZONE_TYPES.STOVE),

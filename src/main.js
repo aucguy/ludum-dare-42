@@ -27,9 +27,23 @@ base.registerModule('main', function() {
       this.dragHandler = new item.DragHandler(this);
       this.zones = new zone.ZoneContainer(this);
       this.zones.createZones(base.getAsset('config/zones'))
+      this.status = new Status(this);
     },
     update: function(time) {
       this.zones.update(time);
+      this.status.update(time);
+    }
+  });
+  
+  var Status = util.extend(Object, 'Status', {
+    constructor: function Status(world) {
+      this.world = world;
+      this.text = this.world.game.add.text(16, 16);
+      this.text.addColor('#FFFFFF', 0);
+      this.money = 0;
+    },
+    update: function(time) {
+      this.text.text = '$' + this.money;
     }
   });
   
