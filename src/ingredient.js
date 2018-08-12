@@ -195,12 +195,19 @@ base.registerModule('ingredient', function() {
   var Pizza = util.extend(Ingredient, 'Pizza', {
     constructor: function Pizza(world, wellness) {
       this.constructor$Ingredient(world, INGREDIENT_TYPES.PIZZA);
-      this.addComponent(new component.CookedComponent(world, zoneType.ZONE_TYPES.OVEN));
-      this.addComponent(new component.WellnessComponent(world, wellness));
+      this.cookedComponent = new component.CookedComponent(world, zoneType.ZONE_TYPES.OVEN);
+      this.addComponent(this.cookedComponent);
+      this.wellnessComponent = new component.WellnessComponent(world, wellness);
+      this.addComponent(this.wellnessComponent);
       this.originalWellness = wellness;
     },
     isComplete: function() {
       return true;
+    },
+    update: function(time) {
+      this.update$Ingredient(time);
+      var cookWellness = Math.abs(this.cookedComponent.cookTime / component.MAX_COOK_TIME) * component.MAX_WELLNESS;
+      this.wellnessComponent.wellness = (cookWellness + this.originalWellness) / 2;
     }
   });
   
