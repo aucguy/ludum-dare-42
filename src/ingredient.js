@@ -51,22 +51,17 @@ base.registerModule('ingredient', function() {
     }
   });
   
-  var BowlType = util.extend(Object, 'BowlType', {
+  var ContainerType = util.extend(Object, 'BowlType', {
     constructor: function BowlType(graphic, allowed) {
       this.graphic = graphic
       this.allowed = allowed;
     }
   });
   
-  var BOWL_TYPES = {
-    EMPTY: new BowlType('image/bowl', null),
-    DOUGH: new BowlType('image/doughBowl', [INGREDIENT_TYPES.WATER, INGREDIENT_TYPES.FLOUR, INGREDIENT_TYPES.YEAST])
-  };
-  
-  function getBowlTypeForIngredient(ingredient) {
-    var names = Object.getOwnPropertyNames(BOWL_TYPES);
+  function getContainerTypeForIngredient(types, ingredient) {
+    var names = Object.getOwnPropertyNames(types);
     for(var i=0; i<names.length; i++) {
-      var value = BOWL_TYPES[names[i]];
+      var value = types[names[i]];
       if(value.allowed !== null && value.allowed.indexOf(ingredient.type) !== -1) {
         return value;
       }
@@ -74,26 +69,26 @@ base.registerModule('ingredient', function() {
     return null;
   }
   
-  var MAX_BOWL_AMOUNT = 1;
+  var MAX_CONTAINER_AMOUNT = 1;
   
-  var Bowl = util.extend(Ingredient, 'Bowl', {
-    constructor: function Bowl(world, bowlType, contents) {
-      this.constructor$Ingredient(world, INGREDIENT_TYPES.BOWL);
-      this.bowlType = bowlType;
+  var Container = util.extend(Ingredient, 'Container', {
+    constructor: function Bowl(world, type, containerType, contents) {
+      this.constructor$Ingredient(world, type);
+      this.containerType = containerType;
       this.contents = contents;
       this.addComponent(new component.CookedComponent(world));
       this.addComponent(new component.CompleteComponent(world));
     },
     canAddIngredient: function(other) {
       //if empty, you can put in whatever
-      if(this.bowlType === BOWL_TYPES.EMPTY) {
-        return getBowlTypeForIngredient(other) !== null;
+      if(this.containerType === this.getEmptyType()) {
+        return getContainerTypeForIngredient(this.getTypes(), other) !== null;
       //if of a certain type, only certain things allowed
-      } else if(this.bowlType.allowed.indexOf(other.type) === -1) {
+      } else if(this.containerType.allowed.indexOf(other.type) === -1) {
         return false;
       //maximum amount of stuff
       } else {
-        return !this.contents.contains(other.type) || this.contents.get(other.type) < MAX_BOWL_AMOUNT;
+        return !this.contents.contains(other.type) || this.contents.get(other.type) < MAX_CONTAINER_AMOUNT;
       }
     },
     addIngredient: function(other) {
@@ -108,32 +103,85 @@ base.registerModule('ingredient', function() {
         newContents.put(other.type, 1);
       }
       
-      var bowlType;
-      if(this.bowlType === BOWL_TYPES.EMPTY) {
-        bowlType = getBowlTypeForIngredient(other);
+      var containerType;
+      if(this.containerType === this.getEmptyType()) {
+        containerType = getContainerTypeForIngredient(this.getTypes(), other);
       } else {
-        bowlType = this.bowlType;
+        containerType = this.containerType;
       }
-      return new Bowl(this.world, bowlType, newContents);
+      return this.createContainer(this.world, containerType, newContents);
     },
     getGraphic: function() {
-      return this.bowlType.graphic;
+      return this.containerType.graphic;
+    },
+    getEmptyType: function() {
+      //abstract
+    },
+    getTypes: function() {
+      //abstract
+    },
+    createContainer: function(world, containerType, newContents) {
+      //abstract
+    }
+  });
+  
+  var BOWL_TYPES = {
+    EMPTY: new ContainerType('image/bowl', null),
+    DOUGH: new ContainerType('image/doughBowl', [INGREDIENT_TYPES.WATER, INGREDIENT_TYPES.FLOUR, INGREDIENT_TYPES.YEAST])
+  };
+  
+  var Bowl = util.extend(Container, 'Bowl', {
+    constructor: function Bowl(world, containerType, contents) {
+      this.constructor$Container(world, INGREDIENT_TYPES.BOWL, containerType, contents);
+    },
+    getEmptyType: function() {
+      return BOWL_TYPES.EMPTY
+    },
+    getTypes: function() {
+      return BOWL_TYPES;
+    },
+    createContainer: function(world, containerType, newContents) {
+      return new Bowl(world, containerType, newContents)
+    }
+  });
+  
+  var POT_TYPES = {
+    EMPTY: new ContainerType('image/pot', null),
+    SAUCE: new ContainerType('image/saucePot', [INGREDIENT_TYPES.TOMATO, INGREDIENT_TYPES.PEPPER, INGREDIENT_TYPES.FLOUR])
+  };
+  
+  var Pot = util.extend(Container, 'Pot', {
+    constructor: function Bowl(world, containerType, contents) {
+      this.constructor$Container(world, INGREDIENT_TYPES.POT, containerType, contents);
+    },
+    getEmptyType: function() {
+      return POT_TYPES.EMPTY
+    },
+    getTypes: function() {
+      return POT_TYPES;
+    },
+    createContainer: function(world, containerType, newContents) {
+      return new Pot(world, containerType, newContents)
     }
   });
   
   function mix(a, b) {
     if(a.type == INGREDIENT_TYPES.BOWL) {
-      return mixBowl(a, b);
+      return mixContainer(a, b);
     } else if(b.type == INGREDIENT_TYPES.BOWL) {
-      return mixBowl(b, a);
+      return mixContainer(b, a);
+    } else if(a.type == INGREDIENT_TYPES.POT) {
+      return mixContainer(a, b);
+    } else if(b.type == INGREDIENT_TYPES.POT) {
+      return mixContainer(b, a);
     } else {
       return null;
     }
   }
   
-  function mixBowl(bowl, other) {
-    if(bowl.canAddIngredient(other)) {
-      return bowl.addIngredient(other);
+  function mixContainer(container, other) {
+    if(container.canAddIngredient(other)) {
+      return container.addIngredient(other);
     } else {
       return null;
     }
@@ -142,6 +190,8 @@ base.registerModule('ingredient', function() {
   function toCookingIngredient(world, original) {
     if(original.type === INGREDIENT_TYPES.BOWL) {
       return new Bowl(world, BOWL_TYPES.EMPTY, new util.Map());
+    } else if(original.type === INGREDIENT_TYPES.POT) {
+      return new Pot(world, POT_TYPES.EMPTY, new util.Map());
     } else {
       return new Ingredient(world, original.type);
     }

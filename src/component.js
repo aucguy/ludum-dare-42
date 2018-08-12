@@ -69,7 +69,7 @@ base.registerModule('component', function() {
       this.sprite.visible = this.shouldBeVisible();
     },
     shouldBeVisible: function() {
-      var allowed = this.ingredient.bowlType.allowed;
+      var allowed = this.ingredient.containerType.allowed;
       var contents = this.ingredient.contents;
 
       if(allowed === null) {
