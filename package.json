@@ -1,6 +1,6 @@
 {
   "name": "ludum-dare-42",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "entry for ludum-dare-42",
   "main": "index.js",
   "scripts": {
@@ -17,9 +17,9 @@
   },
   "homepage": "https://github.com/aucguy/ludum-dare-42#readme",
   "dependencies": {
-    "aucguy-ludum-dare-base": "^1.0.4"
+    "aucguy-ludum-dare-base": "^1.0.5"
   },
   "devDependencies": {
-    "gulp": "^3.9.1"
+    "gulp": "^4.0.0"
   }
 }
