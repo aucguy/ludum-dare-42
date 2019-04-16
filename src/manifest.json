@@ -1,11 +1,11 @@
 {
     "items": [
-        ["scripts/main", "src/main.js", "script"],
-        ["scripts/ingredient", "src/ingredient.js", "script"],
-        ["scripts/item", "src/item.js", "script"],
-        ["scripts/zone", "src/zone.js", "script"],
-        ["scripts/ingredient", "src/ingredient.js", "script"],
-        ["scripts/component", "src/component.js", "script"],
-        ["scripts/zoneType", "src/zoneType.js", "script"]
+        ["scripts/main", "src/main.js", "module"],
+        ["scripts/ingredient", "src/ingredient.js", "module"],
+        ["scripts/item", "src/item.js", "module"],
+        ["scripts/zone", "src/zone.js", "module"],
+        ["scripts/ingredient", "src/ingredient.js", "module"],
+        ["scripts/component", "src/component.js", "module"],
+        ["scripts/zoneType", "src/zoneType.js", "module"]
     ]
 }
