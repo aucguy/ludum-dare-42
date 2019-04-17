@@ -1,9 +1,7 @@
 import * as util from '/lib/util.js';
 import * as zone from './zone.js'
 import * as item from './item.js';
-import { getAsset } from '/node_modules/aucguy-ludum-dare-base/lib/common/indexlib.js';
-
-console.log('main loading');
+import { getAsset } from '/lib/indexlib.js';
 
 function init() {
   util.removeLoadingScreen();

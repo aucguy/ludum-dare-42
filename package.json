@@ -17,7 +17,8 @@
   },
   "homepage": "https://github.com/aucguy/ludum-dare-42#readme",
   "dependencies": {
-    "aucguy-ludum-dare-base": "^1.0.5"
+    "aucguy-ludum-dare-base": "file:../ludum-dare-base",
+    "through2": "^3.0.1"
   },
   "devDependencies": {
     "gulp": "^4.0.0"

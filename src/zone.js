@@ -1,7 +1,7 @@
 import * as util from '/lib/util.js';
 import * as item from './item.js';
 import * as ingredient from './ingredient.js';
-import * as  zoneType from './zoneType.js';
+import * as zoneType from './zoneType.js';
 
 var ZONE_BORDERS = true; //for debugging
 
