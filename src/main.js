@@ -4,7 +4,7 @@ import * as item from './item.js';
 import { getAsset } from '/lib/indexlib.js';
 
 function init() {
-  util.removeLoadingScreen();
+  util.removeLoadingLogo();
   var game = new Phaser.Game({
     width: 640,
     height: 480,
