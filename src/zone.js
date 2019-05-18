@@ -18,19 +18,24 @@ var ZoneContainer = util.extend(Object, 'ZoneContainer', {
       this.children.push(zone);
     }
     if(ZONE_BORDERS) {
-      var bitmap = this.world.game.add.bitmapData(this.world.game.width, this.world.game.height);
-      bitmap.context.save();
-      bitmap.context.strokeStyle = '#FFFFFF';
-      bitmap.context.lineWidth = 5;
+      var size = this.world.scene.scale.gameSize;
+      var canvas = util.createCanvas(size.width, size.height);
+      var ctx = canvas.getContext('2d');
+      ctx.save();
+      ctx.strokeStyle = '#FFFFFF';
+      ctx.lineWidth = 5;
       for(var i=0; i<this.children.length; i++) {
         var rect = this.children[i].rect;
-        bitmap.context.beginPath();
-        bitmap.context.rect(rect.left, rect.top, rect.width, rect.height);
-        bitmap.context.closePath();
-        bitmap.context.stroke();
+        ctx.beginPath();
+        ctx.rect(rect.left, rect.top, rect.width, rect.height);
+        ctx.closePath();
+        ctx.stroke();
       }
-      bitmap.context.restore();
-      this.world.game.add.sprite(0, 0, bitmap);
+      ctx.restore();
+      var name = '$ZONE_BORDERS$' + Math.random();
+      this.world.scene.textures.addCanvas(name, canvas);
+      var sprite = this.world.scene.add.sprite(0, 0, name);
+      sprite.setOrigin(0, 0);
     }
   },
   getZone: function(position) {
@@ -89,12 +94,12 @@ var Zone = util.extend(Object, 'Zone', {
   },
   canPlaceItem: function(draggable) {
     //items can't straddle borders
-    if(!this.rect.containsRect(draggable.sprite.getBounds())) {
+    if(!Phaser.Geom.Rectangle.ContainsRect(this.rect, draggable.sprite.getBounds())) {
       return false;
     }
     for(var i=0; i<this.items.length; i++) {
       var item = this.items[i];
-      if(item !== draggable && draggable.sprite.getBounds().intersects(item.sprite.getBounds())) {
+      if(item !== draggable && Phaser.Geom.Rectangle.Overlaps(draggable.sprite.getBounds(), item.sprite.getBounds())) {
         return false;
       }
     }
@@ -152,12 +157,12 @@ var OrderZone = util.extend(Zone, 'OrderZone', {
 
 function createZoneConstructor(type) {
   return function(world, zoneData) {
-    return new Zone(new Phaser.Rectangle(zoneData.left, zoneData.top, zoneData.width, zoneData.height), type);
+    return new Zone(new Phaser.Geom.Rectangle(zoneData.left, zoneData.top, zoneData.width, zoneData.height), type);
   };
 }
 
 function constructPermanentZone(world, zoneData) {
-  var zone = new PermanentZone(new Phaser.Rectangle(zoneData.left, zoneData.top, zoneData.width, zoneData.height));
+  var zone = new PermanentZone(new Phaser.Geom.Rectangle(zoneData.left, zoneData.top, zoneData.width, zoneData.height));
   if(zoneData.items) {
     for(var i=0; i<zoneData.items.length; i++) {
       var itemData = zoneData.items[i];
@@ -169,11 +174,11 @@ function constructPermanentZone(world, zoneData) {
 }
 
 function constructGarbageZone(world, zoneData) {
-  return new GarbageZone(new Phaser.Rectangle(zoneData.left, zoneData.top, zoneData.width, zoneData.height));
+  return new GarbageZone(new Phaser.Geom.Rectangle(zoneData.left, zoneData.top, zoneData.width, zoneData.height));
 }
 
 function constructOrderZone(world, zoneData) {
-  return new OrderZone(new Phaser.Rectangle(zoneData.left, zoneData.top, zoneData.width, zoneData.height));
+  return new OrderZone(new Phaser.Geom.Rectangle(zoneData.left, zoneData.top, zoneData.width, zoneData.height));
 }
 
 var ZONE_CONSTRUCTORS = {

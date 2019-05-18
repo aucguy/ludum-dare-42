@@ -39,20 +39,22 @@ var CookedComponent = util.extend(IngredientComponent, 'CookedComponent', {
     this.updateSprites();
   },
   updateSprites: function() {
-    this.barSprite.position.x = this.ingredient.item.sprite.position.x;
-    this.barSprite.position.y = this.ingredient.item.sprite.position.y;
+    this.barSprite.x = this.ingredient.item.sprite.x;
+    this.barSprite.y = this.ingredient.item.sprite.y;
     
     var progress = this.cookTime / MAX_COOK_TIME * this.barSprite.getBounds().width;
-    this.arrowSprite.position.x = this.barSprite.position.x - this.arrowSprite.getBounds().width / 2 + progress;
-    this.arrowSprite.position.y = this.barSprite.getBounds().bottom;
+    this.arrowSprite.x = this.barSprite.x - this.arrowSprite.getBounds().width / 2 + progress;
+    this.arrowSprite.y = this.barSprite.getBounds().bottom;
   },
   kill: function() {
-    this.barSprite.kill();
-    this.arrowSprite.kill();
+    this.barSprite.destroy();
+    this.arrowSprite.destroy();
   },
   init: function() {
-    this.barSprite = this.world.game.add.sprite(0, 0, 'image/cookBar');
-    this.arrowSprite = this.world.game.add.sprite(0, 0, 'image/cookArrow');
+    this.barSprite = this.world.scene.add.sprite(0, 0, 'image/cookBar');
+    this.barSprite.setOrigin(0, 0);
+    this.arrowSprite = this.world.scene.add.sprite(0, 0, 'image/cookArrow');
+    this.arrowSprite.setOrigin(0, 0);
     this.updateSprites();
   }
 });
@@ -63,8 +65,8 @@ var CompleteComponent = util.extend(IngredientComponent, 'CompleteComponent', {
     this.sprite = null;
   },
   update: function(time) {
-    this.sprite.position.x = this.ingredient.item.sprite.getBounds().right - this.sprite.getBounds().width;
-    this.sprite.position.y = this.ingredient.item.sprite.position.y;
+    this.sprite.x = this.ingredient.item.sprite.getBounds().right - this.sprite.getBounds().width;
+    this.sprite.y = this.ingredient.item.sprite.y;
     
     this.sprite.visible = this.isComplete();
   },
@@ -83,10 +85,11 @@ var CompleteComponent = util.extend(IngredientComponent, 'CompleteComponent', {
     return true;
   },
   kill: function() {
-    this.sprite.kill();
+    this.sprite.destroy();
   },
   init: function() {
-    this.sprite = this.world.game.add.sprite(0, 0, 'image/complete');
+    this.sprite = this.world.scene.add.sprite(0, 0, 'image/complete');
+    this.sprite.setOrigin(0, 0);
     this.update(0);
   }
 });
@@ -101,21 +104,23 @@ var WellnessComponent = util.extend(IngredientComponent, 'WellnessComponent', {
     this.wellness = wellness;
   },
   init: function() {
-    this.barSprite = this.world.game.add.sprite(0, 0, 'image/wellnessBar');
-    this.arrowSprite = this.world.game.add.sprite(0, 0, 'image/cookArrow');
+    this.barSprite = this.world.scene.add.sprite(0, 0, 'image/wellnessBar');
+    this.barSprite.setOrigin(0, 0);
+    this.arrowSprite = this.world.scene.add.sprite(0, 0, 'image/cookArrow');
+    this.arrowSprite.setOrigin(0, );
     this.update(0);
   },
   update: function() {
-    this.barSprite.position.x = this.ingredient.item.sprite.position.x;
-    this.barSprite.position.y = this.ingredient.item.sprite.getBounds().bottom - this.barSprite.getBounds().height - this.arrowSprite.getBounds().height;
+    this.barSprite.x = this.ingredient.item.sprite.x;
+    this.barSprite.y = this.ingredient.item.sprite.getBounds().bottom - this.barSprite.getBounds().height - this.arrowSprite.getBounds().height;
     
     var progress = this.wellness / MAX_WELLNESS * this.barSprite.getBounds().width;
-    this.arrowSprite.position.x = this.barSprite.position.x - this.arrowSprite.getBounds().width / 2 + progress;
-    this.arrowSprite.position.y = this.barSprite.getBounds().bottom;
+    this.arrowSprite.x = this.barSprite.x - this.arrowSprite.getBounds().width / 2 + progress;
+    this.arrowSprite.y = this.barSprite.getBounds().bottom;
   },
   kill: function() {
-    this.barSprite.kill();
-    this.arrowSprite.kill();
+    this.barSprite.destroy();
+    this.arrowSprite.destroy();
   }
 });
 

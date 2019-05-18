@@ -5,15 +5,15 @@ var DragHandler = util.extend(Object, 'DragHandler', {
   constructor: function DragHandler(world) {
     this.world = world;
     this.movingItem = null;
-    this.world.game.input.addMoveCallback(this.onMouseMove, this);
-    this.world.game.input.onUp.add(this.onMouseUp, this);
+    this.world.scene.input.on('pointermove', this.onMouseMove, this);
+    this.world.scene.input.on('pointerup', this.onMouseUp, this);
   },
   createDraggable: function(moving) {
     if(this.movingItem !== null) {
       this.movingItem.kill();
     }
     this.movingItem = moving;
-    this.movingItem.whenKill.add(function() {
+    this.movingItem.whenKill.on('do', function() {
       this.movingItem = null;
     }, this);
   },
@@ -31,10 +31,11 @@ var DragHandler = util.extend(Object, 'DragHandler', {
 
 var Item = util.extend(Object, 'Item', {
   constructor: function Item(world, x, y, ingredient) {
-    this.sprite = world.game.add.sprite(x, y, ingredient.getGraphic());
+    this.sprite = world.scene.add.sprite(x, y, ingredient.getGraphic());
+    this.sprite.setOrigin(0, 0);
     this.world = world;
     this.ingredient = ingredient;
-    this.whenKill = new Phaser.Signal();
+    this.whenKill = new Phaser.Events.EventEmitter();
     this.zone = null; //set by zones
     ingredient.item = this;
     ingredient.init();
@@ -46,11 +47,11 @@ var Item = util.extend(Object, 'Item', {
     //abstract
   },
   kill: function() {
-    this.sprite.kill();
+    this.sprite.destroy();
     if(this.zone !== null) {
       this.zone.removeItem(this);
     }
-    this.whenKill.dispatch();
+    this.whenKill.emit('do');
     this.ingredient.kill();
   },
   canBeMixed: function() {
@@ -80,7 +81,7 @@ var PermanentItem = util.extend(Item, 'PermanentItem', {
   },
   place: function(zone, draggable) {
     var ingred = ingredient.toCookingIngredient(this.world, this.ingredient);
-    zone.addItem(new CookingItem(this.world, draggable.sprite.position.x, draggable.sprite.position.y, ingred));
+    zone.addItem(new CookingItem(this.world, draggable.sprite.x, draggable.sprite.y, ingred));
   }
 });
 
@@ -104,8 +105,8 @@ var CookingItem = util.extend(Item, 'CookingItem', {
   },
   place: function(zone, draggable) {
     this.sprite.alpha = 1;
-    this.sprite.position.x = draggable.sprite.position.x;
-    this.sprite.position.y = draggable.sprite.position.y;
+    this.sprite.x = draggable.sprite.x;
+    this.sprite.y = draggable.sprite.y;
     zone.addItem(this);
   }
 });
@@ -113,14 +114,14 @@ var CookingItem = util.extend(Item, 'CookingItem', {
 var MovingItem = util.extend(Item, 'MovingItem', {
   constructor: function MovingItem(world, item, point) {
     var ingred = ingredient.toMovingIngredient(world, item.ingredient);
-    this.constructor$Item(world, item.sprite.position.x, item.sprite.position.y, ingred);
-    this.offset = new Phaser.Point(point.x - item.sprite.x, point.y - item.sprite.y);
-    this.whenUsed = new Phaser.Signal();
+    this.constructor$Item(world, item.sprite.x, item.sprite.y, ingred);
+    this.offset = new Phaser.Math.Vector2(point.x - item.sprite.x, point.y - item.sprite.y);
+    this.whenUsed = new Phaser.Events.EventEmitter();
     this.underlyingItem = item;
   },
   onMouseMove: function(position) {
-    this.sprite.position.x = position.x - this.offset.x;
-    this.sprite.position.y = position.y - this.offset.y;
+    this.sprite.x = position.x - this.offset.x;
+    this.sprite.y = position.y - this.offset.y;
   },
   onMouseUp: function(position) {
     this.kill();
@@ -131,10 +132,9 @@ var MovingItem = util.extend(Item, 'MovingItem', {
         if(overItem.canBeMixed()) {
           var mixedIngredient = ingredient.mix(this.underlyingItem.ingredient, overItem.ingredient);
           if(mixedIngredient !== null) {
-            var position = overItem.sprite.position;
             this.underlyingItem.onMixed();
             overItem.onMixed();
-            zone.addItem(new CookingItem(this.world, position.x, position.y, mixedIngredient));
+            zone.addItem(new CookingItem(this.world, overItem.sprite.x, overItem.sprite.y, mixedIngredient));
           } else {
             this.underlyingItem.onMoveFail();
           }

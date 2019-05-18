@@ -10,21 +10,21 @@ function init() {
     height: 480,
     parent: 'gameContainer',
     canvasID: 'display',
-    state: new CustomBootState()
+    scene: new CustomBootScene()
   });
-  game.state.add('play', new PlayState());
+  game.scene.add('play', new PlayScene());
   return game;
 }
 
-var CustomBootState = util.extend(util.BootState, 'CustomBootState', {
+var CustomBootScene = util.extend(util.BootScene, 'CustomBootScene', {
   update: function() {
-    this.state.start('play');
+    this.scene.start('play');
   }
 });
 
 var World = util.extend(Object, 'World', {
-  constructor: function World(game) {
-    this.game = game;
+  constructor: function World(scene) {
+    this.scene = scene;
     this.dragHandler = new item.DragHandler(this);
     this.zones = new zone.ZoneContainer(this);
     this.zones.createZones(getAsset('config/zones'))
@@ -39,8 +39,8 @@ var World = util.extend(Object, 'World', {
 var Status = util.extend(Object, 'Status', {
   constructor: function Status(world) {
     this.world = world;
-    this.text = this.world.game.add.text(16, 16);
-    this.text.addColor('#FFFFFF', 0);
+    this.text = this.world.scene.add.text(16, 16, '');
+    this.text.setColor('#FFFFFF');
     this.money = 0;
   },
   update: function(time) {
@@ -48,25 +48,24 @@ var Status = util.extend(Object, 'Status', {
   }
 });
 
-var PlayState = util.extend(Phaser.State, 'PlayState', {
+var PlayScene = util.extend(Phaser.Scene, 'PlayScene', {
   constructor: function PlayState() {
-    this.constructor$State();
+    this.constructor$Scene();
     this.world = null;
     this.timer = null;
   },
   create: function() {
-    this.game.add.sprite(0, 0, 'image/background');
-    this.world = new World(this.game);
-    this.input.onDown.add(this.onClick, this);
-    this.timer = this.game.time.create();
-    this.timer.start();
-    this.lastTime = this.timer.ms;
+    var background = this.add.sprite(0, 0, 'image/background');
+    background.setOrigin(0, 0);
+    this.world = new World(this);
+    this.input.on('pointerdown', this.onClick, this);
+    this.lastTime = this.time.now;
   },
   onClick: function(pointer) {
     this.world.zones.onClick(pointer.position);
   },
   update: function() {
-    var currentTime = this.timer.ms;
+    var currentTime = this.time.now;
     this.world.update(currentTime - this.lastTime);
     this.lastTime = currentTime;
   }
