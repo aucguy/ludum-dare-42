@@ -13,6 +13,7 @@ function init() {
     state: new CustomBootState()
   });
   game.state.add('play', new PlayState());
+  return game;
 }
 
 var CustomBootState = util.extend(util.BootState, 'CustomBootState', {
