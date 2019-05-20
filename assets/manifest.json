@@ -1,24 +1,77 @@
 {
     "items": [
-        ["image/background", "assets/background.svg", "image"],
-        ["image/cheese", "assets/cheese.png", "image"],
-        ["image/flour", "assets/flour.png", "image"],
-        ["image/pepper", "assets/pepper.png", "image"],
-        ["image/tomato", "assets/tomato.png", "image"],
-        ["image/water", "assets/water.png", "image"],
-        ["image/yeast", "assets/yeast.png", "image"],
-        ["image/bowl", "assets/bowl.png", "image"],
-        ["image/doughBowl", "assets/doughBowl.png", "image"],
-        ["image/pot", "assets/pot.png", "image"],
-        ["image/saucePot", "assets/saucePot.png", "image"],
-        ["image/saucePizza", "assets/saucePizza.png", "image"],
-        ["image/pizza", "assets/pizza.png", "image"],
-        
-        ["image/cookBar", "assets/cookBar.png", "image"],
-        ["image/cookArrow", "assets/cookArrow.png", "image"],
-        ["image/wellnessBar", "assets/wellnessBar.png", "image"],
-        ["image/complete", "assets/complete.png", "image"],
-        
-        ["config/zones", "assets/zones.json", "json"]
+      {
+          "name": "image/background",
+          "url": "assets/background.svg",
+          "type": "image"
+      }, {
+          "name": "image/cheese",
+          "url": "assets/cheese.png",
+          "type": "image"
+      }, {
+          "name": "image/flour",
+          "url": "assets/flour.png",
+          "type": "image"
+      }, {
+          "name": "image/pepper",
+          "url": "assets/pepper.png",
+          "type": "image"
+      }, {
+          "name": "image/tomato",
+          "url": "assets/tomato.png",
+          "type": "image"
+      }, {
+          "name": "image/water",
+          "url": "assets/water.png",
+          "type": "image"
+      }, {
+          "name": "image/yeast",
+          "url": "assets/yeast.png",
+          "type": "image"
+      }, {
+          "name": "image/bowl",
+          "url": "assets/bowl.png",
+          "type": "image"
+      }, {
+          "name": "image/doughBowl",
+          "url": "assets/doughBowl.png",
+          "type": "image"
+      }, {
+          "name": "image/pot",
+          "url": "assets/pot.png",
+          "type": "image"
+      }, {
+          "name": "image/saucePot",
+          "url": "assets/saucePot.png",
+          "type": "image"
+      }, {
+          "name": "image/saucePizza",
+          "url": "assets/saucePizza.png",
+          "type": "image"
+      }, {
+          "name": "image/pizza",
+          "url": "assets/pizza.png",
+          "type": "image"
+      }, {
+          "name": "image/cookBar",
+          "url": "assets/cookBar.png",
+          "type": "image"
+      }, {
+          "name": "image/cookArrow",
+          "url": "assets/cookArrow.png",
+          "type": "image"
+      }, {
+          "name": "image/wellnessBar",
+          "url": "assets/wellnessBar.png",
+          "type": "image"
+      }, {
+          "name": "image/complete",
+          "url": "assets/complete.png",
+          "type": "image"
+      }, {
+          "name": "config/zones",
+          "url": "assets/zones.json",
+          "type": "json"
+      }               
     ]
 }
