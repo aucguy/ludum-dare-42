@@ -17,10 +17,11 @@
   },
   "homepage": "https://github.com/aucguy/ludum-dare-42#readme",
   "dependencies": {
-    "aucguy-ludum-dare-base": "file:../ludum-dare-base",
-    "through2": "^3.0.1"
+    "aucguy-ludum-dare-base": "file:../ludum-dare-base"
   },
   "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
     "gulp": "^4.0.0"
   }
 }
