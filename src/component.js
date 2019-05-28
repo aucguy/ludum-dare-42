@@ -1,7 +1,7 @@
 import * as zoneType from './zoneType.js';
 import * as util from '/lib/util.js';
 
-var IngredientComponent = util.extend(Object, 'IngredientComponent',{
+var IngredientComponent = util.extend(Object, 'IngredientComponent', {
   constructor: function IngredientComponent(world) {
     this.world = world;
     this.ingredient = null;
@@ -41,7 +41,7 @@ var CookedComponent = util.extend(IngredientComponent, 'CookedComponent', {
   updateSprites: function() {
     this.barSprite.x = this.ingredient.item.sprite.x;
     this.barSprite.y = this.ingredient.item.sprite.y;
-    
+
     var progress = this.cookTime / MAX_COOK_TIME * this.barSprite.getBounds().width;
     this.arrowSprite.x = this.barSprite.x - this.arrowSprite.getBounds().width / 2 + progress;
     this.arrowSprite.y = this.barSprite.getBounds().bottom;
@@ -67,7 +67,7 @@ var CompleteComponent = util.extend(IngredientComponent, 'CompleteComponent', {
   update: function(time) {
     this.sprite.x = this.ingredient.item.sprite.getBounds().right - this.sprite.getBounds().width;
     this.sprite.y = this.ingredient.item.sprite.y;
-    
+
     this.sprite.visible = this.isComplete();
   },
   isComplete: function() {
@@ -77,7 +77,7 @@ var CompleteComponent = util.extend(IngredientComponent, 'CompleteComponent', {
     if(allowed === null) {
       return false;
     }
-    for(var i=0; i<allowed.length; i++) {
+    for(var i = 0; i < allowed.length; i++) {
       if(!contents.contains(allowed[i]) || contents.get(allowed[i]) === 0) {
         return false;
       }
@@ -113,7 +113,7 @@ var WellnessComponent = util.extend(IngredientComponent, 'WellnessComponent', {
   update: function() {
     this.barSprite.x = this.ingredient.item.sprite.x;
     this.barSprite.y = this.ingredient.item.sprite.getBounds().bottom - this.barSprite.getBounds().height - this.arrowSprite.getBounds().height;
-    
+
     var progress = this.wellness / MAX_WELLNESS * this.barSprite.getBounds().width;
     this.arrowSprite.x = this.barSprite.x - this.arrowSprite.getBounds().width / 2 + progress;
     this.arrowSprite.y = this.barSprite.getBounds().bottom;

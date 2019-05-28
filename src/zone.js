@@ -12,7 +12,7 @@ var ZoneContainer = util.extend(Object, 'ZoneContainer', {
   },
   createZones: function(data) {
     var i;
-    for(i=0; i<data.zones.length; i++) {
+    for(i = 0; i < data.zones.length; i++) {
       var zoneData = data.zones[i];
       var constructor = ZONE_CONSTRUCTORS[zoneData.type];
       var zone = constructor(this.world, zoneData);
@@ -25,7 +25,7 @@ var ZoneContainer = util.extend(Object, 'ZoneContainer', {
       ctx.save();
       ctx.strokeStyle = '#FFFFFF';
       ctx.lineWidth = 5;
-      for(i=0; i<this.children.length; i++) {
+      for(i = 0; i < this.children.length; i++) {
         var rect = this.children[i].rect;
         ctx.beginPath();
         ctx.rect(rect.left, rect.top, rect.width, rect.height);
@@ -40,7 +40,7 @@ var ZoneContainer = util.extend(Object, 'ZoneContainer', {
     }
   },
   getZone: function(position) {
-    for(var i=0; i<this.children.length; i++) {
+    for(var i = 0; i < this.children.length; i++) {
       if(this.children[i].rect.contains(position.x, position.y)) {
         return this.children[i];
       }
@@ -54,7 +54,7 @@ var ZoneContainer = util.extend(Object, 'ZoneContainer', {
     }
   },
   update: function(time) {
-    for(var i=0; i<this.children.length; i++) {
+    for(var i = 0; i < this.children.length; i++) {
       this.children[i].update(time);
     }
   }
@@ -67,7 +67,7 @@ var Zone = util.extend(Object, 'Zone', {
     this.items = []; //[Item]
   },
   getItem: function(position) {
-   for(var i=0; i<this.items.length; i++) {
+    for(var i = 0; i < this.items.length; i++) {
       if(this.items[i].containsPoint(position)) {
         return this.items[i];
       }
@@ -98,7 +98,7 @@ var Zone = util.extend(Object, 'Zone', {
     if(!Phaser.Geom.Rectangle.ContainsRect(this.rect, draggable.sprite.getBounds())) {
       return false;
     }
-    for(var i=0; i<this.items.length; i++) {
+    for(var i = 0; i < this.items.length; i++) {
       var item = this.items[i];
       if(item !== draggable && Phaser.Geom.Rectangle.Overlaps(draggable.sprite.getBounds(), item.sprite.getBounds())) {
         return false;
@@ -107,7 +107,7 @@ var Zone = util.extend(Object, 'Zone', {
     return true;
   },
   update: function(time) {
-    for(var i=0; i<this.items.length; i++) {
+    for(var i = 0; i < this.items.length; i++) {
       this.items[i].update(time);
     }
   }
@@ -165,7 +165,7 @@ function createZoneConstructor(type) {
 function constructPermanentZone(world, zoneData) {
   var zone = new PermanentZone(new Phaser.Geom.Rectangle(zoneData.left, zoneData.top, zoneData.width, zoneData.height));
   if(zoneData.items) {
-    for(var i=0; i<zoneData.items.length; i++) {
+    for(var i = 0; i < zoneData.items.length; i++) {
       var itemData = zoneData.items[i];
       var ingred = new ingredient.Ingredient(world, ingredient.INGREDIENT_TYPES[itemData.ingredientType.toUpperCase()]);
       zone.addItem(new item.PermanentItem(world, itemData.x, itemData.y, ingred));

@@ -36,17 +36,17 @@ var Ingredient = util.extend(Object, 'Ingredient', {
     component.ingredient = this;
   },
   update: function(time) {
-    for(var i=0; i<this.components.length; i++) {
+    for(var i = 0; i < this.components.length; i++) {
       this.components[i].update(time);
     }
   },
   kill: function() {
-    for(var i=0; i<this.components.length; i++) {
+    for(var i = 0; i < this.components.length; i++) {
       this.components[i].kill();
     }
   },
   init: function() {
-    for(var i=0; i<this.components.length; i++) {
+    for(var i = 0; i < this.components.length; i++) {
       this.components[i].init();
     }
   }
@@ -61,7 +61,7 @@ var ContainerType = util.extend(Object, 'BowlType', {
 
 function getContainerTypeForIngredient(types, ingredient) {
   var names = Object.getOwnPropertyNames(types);
-  for(var i=0; i<names.length; i++) {
+  for(var i = 0; i < names.length; i++) {
     var value = types[names[i]];
     if(value.allowed !== null && value.allowed.indexOf(ingredient.type) !== -1) {
       return value;
@@ -86,17 +86,17 @@ var Container = util.extend(Ingredient, 'Container', {
     //if empty, you can put in whatever
     if(this.containerType === this.getEmptyType()) {
       return getContainerTypeForIngredient(this.getTypes(), other) !== null;
-    //if of a certain type, only certain things allowed
+      //if of a certain type, only certain things allowed
     } else if(this.containerType.allowed.indexOf(other.type) === -1) {
       return false;
-    //maximum amount of stuff
+      //maximum amount of stuff
     } else {
       return !this.contents.contains(other.type) || this.contents.get(other.type) < MAX_CONTAINER_AMOUNT;
     }
   },
   addIngredient: function(other) {
     var newContents = new util.Map();
-    for(var i=0; i<this.contents.entries.length; i++) {
+    for(var i = 0; i < this.contents.entries.length; i++) {
       var entry = this.contents.entries[i];
       newContents.put(entry.key, entry.value);
     }
@@ -105,7 +105,7 @@ var Container = util.extend(Ingredient, 'Container', {
     } else {
       newContents.put(other.type, 1);
     }
-    
+
     var containerType;
     if(this.containerType === this.getEmptyType()) {
       containerType = getContainerTypeForIngredient(this.getTypes(), other);
@@ -230,9 +230,9 @@ function mix(a, b) {
 
 function canMakeSaucePizza(a, b) {
   return (a.type === INGREDIENT_TYPES.BOWL && a.containerType === BOWL_TYPES.DOUGH && a.getCooked() !== 0 &&
-    b.type === INGREDIENT_TYPES.POT && b.containerType === POT_TYPES.SAUCE && b.getCooked() !== 0) || 
+      b.type === INGREDIENT_TYPES.POT && b.containerType === POT_TYPES.SAUCE && b.getCooked() !== 0) ||
     (b.type === INGREDIENT_TYPES.BOWL && b.containerType === BOWL_TYPES.DOUGH && b.getCooked() !== 0 &&
-    a.type === INGREDIENT_TYPES.POT && a.containerType === POT_TYPES.SAUCE && a.getCooked() !== 0);
+      a.type === INGREDIENT_TYPES.POT && a.containerType === POT_TYPES.SAUCE && a.getCooked() !== 0);
 }
 
 function mixContainer(container, other) {
