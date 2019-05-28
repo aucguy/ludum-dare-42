@@ -54,7 +54,7 @@ var Ingredient = util.extend(Object, 'Ingredient', {
 
 var ContainerType = util.extend(Object, 'BowlType', {
   constructor: function BowlType(graphic, allowed) {
-    this.graphic = graphic
+    this.graphic = graphic;
     this.allowed = allowed;
   }
 });
@@ -147,13 +147,13 @@ var Bowl = util.extend(Container, 'Bowl', {
     this.constructor$Container(world, INGREDIENT_TYPES.BOWL, containerType, contents);
   },
   getEmptyType: function() {
-    return BOWL_TYPES.EMPTY
+    return BOWL_TYPES.EMPTY;
   },
   getTypes: function() {
     return BOWL_TYPES;
   },
   createContainer: function(world, containerType, newContents) {
-    return new Bowl(world, containerType, newContents)
+    return new Bowl(world, containerType, newContents);
   },
   getCookZone: function() {
     return zoneType.ZONE_TYPES.WARM;
@@ -170,13 +170,13 @@ var Pot = util.extend(Container, 'Pot', {
     this.constructor$Container(world, INGREDIENT_TYPES.POT, containerType, contents);
   },
   getEmptyType: function() {
-    return POT_TYPES.EMPTY
+    return POT_TYPES.EMPTY;
   },
   getTypes: function() {
     return POT_TYPES;
   },
   createContainer: function(world, containerType, newContents) {
-    return new Pot(world, containerType, newContents)
+    return new Pot(world, containerType, newContents);
   },
   getCookZone: function() {
     return zoneType.ZONE_TYPES.STOVE;
@@ -186,7 +186,7 @@ var Pot = util.extend(Container, 'Pot', {
 var SaucePizza = util.extend(Ingredient, 'SaucePizza', {
   constructor: function SaucePizza(world, wellness) {
     this.constructor$Ingredient(world, INGREDIENT_TYPES.SAUCE_PIZZA);
-    this.wellnessComponent = new component.WellnessComponent(world, wellness)
+    this.wellnessComponent = new component.WellnessComponent(world, wellness);
     this.addComponent(this.wellnessComponent);
   }
 });
@@ -229,10 +229,10 @@ function mix(a, b) {
 }
 
 function canMakeSaucePizza(a, b) {
-  return (a.type === INGREDIENT_TYPES.BOWL && a.containerType === BOWL_TYPES.DOUGH && a.getCooked() !== 0
-    && b.type === INGREDIENT_TYPES.POT && b.containerType === POT_TYPES.SAUCE && b.getCooked() !== 0) || 
-    (b.type === INGREDIENT_TYPES.BOWL && b.containerType === BOWL_TYPES.DOUGH && b.getCooked() !== 0
-    && a.type === INGREDIENT_TYPES.POT && a.containerType === POT_TYPES.SAUCE && a.getCooked() !== 0);
+  return (a.type === INGREDIENT_TYPES.BOWL && a.containerType === BOWL_TYPES.DOUGH && a.getCooked() !== 0 &&
+    b.type === INGREDIENT_TYPES.POT && b.containerType === POT_TYPES.SAUCE && b.getCooked() !== 0) || 
+    (b.type === INGREDIENT_TYPES.BOWL && b.containerType === BOWL_TYPES.DOUGH && b.getCooked() !== 0 &&
+    a.type === INGREDIENT_TYPES.POT && a.containerType === POT_TYPES.SAUCE && a.getCooked() !== 0);
 }
 
 function mixContainer(container, other) {

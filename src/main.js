@@ -1,5 +1,5 @@
 import * as util from '/lib/util.js';
-import * as zone from './zone.js'
+import * as zone from './zone.js';
 import * as item from './item.js';
 
 function init() {
@@ -26,7 +26,7 @@ var World = util.extend(Object, 'World', {
     this.scene = scene;
     this.dragHandler = new item.DragHandler(this);
     this.zones = new zone.ZoneContainer(this);
-    this.zones.createZones(util.getAsset('config/zones'))
+    this.zones.createZones(util.getAsset('config/zones'));
     this.status = new Status(this);
   },
   update: function(time) {

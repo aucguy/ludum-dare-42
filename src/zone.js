@@ -11,7 +11,8 @@ var ZoneContainer = util.extend(Object, 'ZoneContainer', {
     this.children = [];
   },
   createZones: function(data) {
-    for(var i=0; i<data.zones.length; i++) {
+    var i;
+    for(i=0; i<data.zones.length; i++) {
       var zoneData = data.zones[i];
       var constructor = ZONE_CONSTRUCTORS[zoneData.type];
       var zone = constructor(this.world, zoneData);
@@ -24,7 +25,7 @@ var ZoneContainer = util.extend(Object, 'ZoneContainer', {
       ctx.save();
       ctx.strokeStyle = '#FFFFFF';
       ctx.lineWidth = 5;
-      for(var i=0; i<this.children.length; i++) {
+      for(i=0; i<this.children.length; i++) {
         var rect = this.children[i].rect;
         ctx.beginPath();
         ctx.rect(rect.left, rect.top, rect.width, rect.height);
@@ -189,7 +190,7 @@ var ZONE_CONSTRUCTORS = {
   oven: createZoneConstructor(zoneType.ZONE_TYPES.OVEN),
   warm: createZoneConstructor(zoneType.ZONE_TYPES.WARM),
   garbage: constructGarbageZone
-}
+};
 
 export {
   ZoneContainer,

@@ -90,7 +90,7 @@ var CookingItem = util.extend(Item, 'CookingItem', {
     this.constructor$Item(world, x, y, ingredient);
   },
   onClick: function(point) {
-    var moving = new MovingItem(this.world, this, point)
+    var moving = new MovingItem(this.world, this, point);
     this.world.dragHandler.createDraggable(moving);
     this.sprite.alpha = 0.5;
   },

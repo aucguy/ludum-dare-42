@@ -33,7 +33,7 @@ var CookedComponent = util.extend(IngredientComponent, 'CookedComponent', {
     if(this.ingredient.item.zone.type === this.cookZone && this.ingredient.isComplete()) {
       this.cookTime += time;
       if(this.cookTime > MAX_COOK_TIME) {
-        this.cookTime = MAX_COOK_TIME
+        this.cookTime = MAX_COOK_TIME;
       }
     }
     this.updateSprites();
@@ -107,7 +107,7 @@ var WellnessComponent = util.extend(IngredientComponent, 'WellnessComponent', {
     this.barSprite = this.world.scene.add.sprite(0, 0, 'image/wellnessBar');
     this.barSprite.setOrigin(0, 0);
     this.arrowSprite = this.world.scene.add.sprite(0, 0, 'image/cookArrow');
-    this.arrowSprite.setOrigin(0, );
+    this.arrowSprite.setOrigin(0, 0);
     this.update(0);
   },
   update: function() {
