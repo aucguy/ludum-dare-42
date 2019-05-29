@@ -3,7 +3,6 @@ import * as zone from './zone.js';
 import * as item from './item.js';
 
 function init() {
-  util.removeLoadingLogo();
   var game = new Phaser.Game({
     width: 640,
     height: 480,
