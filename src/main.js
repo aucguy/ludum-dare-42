@@ -7,7 +7,6 @@ function init() {
     width: 640,
     height: 480,
     parent: 'gameContainer',
-    canvasID: 'display',
     scene: new CustomBootScene()
   });
   game.scene.add('play', new PlayScene());
