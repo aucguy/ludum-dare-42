@@ -78,7 +78,7 @@ var CompleteComponent = util.extend(IngredientComponent, 'CompleteComponent', {
       return false;
     }
     for(var i = 0; i < allowed.length; i++) {
-      if(!contents.contains(allowed[i]) || contents.get(allowed[i]) === 0) {
+      if(!contents.has(allowed[i]) || contents.get(allowed[i]) === 0) {
         return false;
       }
     }

@@ -61,7 +61,8 @@ var ZoneContainer = util.extend(Object, 'ZoneContainer', {
 });
 
 var Zone = util.extend(Object, 'Zone', {
-  constructor: function Zone(rect, type) {
+  constructor: function Zone(world, rect, type) {
+    this.world = world;
     this.rect = rect; //Phaser.Rect
     this.type = type;
     this.items = []; //[Item]
@@ -114,8 +115,8 @@ var Zone = util.extend(Object, 'Zone', {
 });
 
 var PermanentZone = util.extend(Zone, 'PermanentZone', {
-  constructor: function PermanentZone(rect) {
-    this.constructor$Zone(rect, zoneType.ZONE_TYPES.INGREDIENTS);
+  constructor: function PermanentZone(world, rect) {
+    this.constructor$Zone(world, rect, zoneType.ZONE_TYPES.INGREDIENTS);
   },
   canPlaceItem: function(item) {
     return false;
@@ -123,13 +124,17 @@ var PermanentZone = util.extend(Zone, 'PermanentZone', {
 });
 
 var GarbageZone = util.extend(Zone, 'GarbageZone', {
-  constructor: function GarbageZone(rect) {
-    this.constructor$Zone(rect, zoneType.ZONE_TYPES.GARBAGE);
+  constructor: function GarbageZone(world, rect) {
+    this.constructor$Zone(world, rect, zoneType.ZONE_TYPES.GARBAGE);
   },
   update: function() {
     this.update$Zone();
+    var hasItem = this.items.length !== 0;
     while(this.items.length !== 0) {
       this.items[0].kill();
+    }
+    if(hasItem) {
+      this.world.scene.sound.play('audio/fail');
     }
   }
 });
@@ -137,18 +142,23 @@ var GarbageZone = util.extend(Zone, 'GarbageZone', {
 var VALUE_MULTIPLIER = 10;
 
 var OrderZone = util.extend(Zone, 'OrderZone', {
-  constructor: function OrderZone(rect) {
-    this.constructor$Zone(rect, zoneType.ZONE_TYPES.ORDER);
+  constructor: function OrderZone(world, rect) {
+    this.constructor$Zone(world, rect, zoneType.ZONE_TYPES.ORDER);
   },
   update: function() {
     this.update$Zone();
+    var hasItem = false;
     while(this.items.length !== 0) {
       var item = this.items[0];
       if(item.ingredient.type === ingredient.INGREDIENT_TYPES.PIZZA) {
         var value = item.ingredient.wellnessComponent.wellness / VALUE_MULTIPLIER;
         item.world.status.money += Math.round(value);
+        hasItem = true;
       }
       item.kill();
+    }
+    if(hasItem) {
+      this.world.scene.sound.play('audio/success');
     }
   },
   canPlaceItem: function(item) {
@@ -158,12 +168,12 @@ var OrderZone = util.extend(Zone, 'OrderZone', {
 
 function createZoneConstructor(type) {
   return function(world, zoneData) {
-    return new Zone(new Phaser.Geom.Rectangle(zoneData.left, zoneData.top, zoneData.width, zoneData.height), type);
+    return new Zone(world, new Phaser.Geom.Rectangle(zoneData.left, zoneData.top, zoneData.width, zoneData.height), type);
   };
 }
 
 function constructPermanentZone(world, zoneData) {
-  var zone = new PermanentZone(new Phaser.Geom.Rectangle(zoneData.left, zoneData.top, zoneData.width, zoneData.height));
+  var zone = new PermanentZone(world, new Phaser.Geom.Rectangle(zoneData.left, zoneData.top, zoneData.width, zoneData.height));
   if(zoneData.items) {
     for(var i = 0; i < zoneData.items.length; i++) {
       var itemData = zoneData.items[i];
@@ -175,11 +185,11 @@ function constructPermanentZone(world, zoneData) {
 }
 
 function constructGarbageZone(world, zoneData) {
-  return new GarbageZone(new Phaser.Geom.Rectangle(zoneData.left, zoneData.top, zoneData.width, zoneData.height));
+  return new GarbageZone(world, new Phaser.Geom.Rectangle(zoneData.left, zoneData.top, zoneData.width, zoneData.height));
 }
 
 function constructOrderZone(world, zoneData) {
-  return new OrderZone(new Phaser.Geom.Rectangle(zoneData.left, zoneData.top, zoneData.width, zoneData.height));
+  return new OrderZone(world, new Phaser.Geom.Rectangle(zoneData.left, zoneData.top, zoneData.width, zoneData.height));
 }
 
 var ZONE_CONSTRUCTORS = {

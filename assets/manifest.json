@@ -72,6 +72,14 @@
           "name": "config/zones",
           "url": "assets/zones.json",
           "type": "json"
-      }               
+      }, {
+        "name": "audio/fail",
+        "url": "assets/audio/fail.wav",
+        "type": "audio"
+      }, {
+        "name": "audio/success",
+        "url": "assets/audio/success.wav",
+        "type": "audio"
+      }
     ]
 }

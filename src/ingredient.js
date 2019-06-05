@@ -91,19 +91,18 @@ var Container = util.extend(Ingredient, 'Container', {
       return false;
       //maximum amount of stuff
     } else {
-      return !this.contents.contains(other.type) || this.contents.get(other.type) < MAX_CONTAINER_AMOUNT;
+      return !this.contents.has(other.type) || this.contents.get(other.type) < MAX_CONTAINER_AMOUNT;
     }
   },
   addIngredient: function(other) {
     var newContents = new util.Map();
-    for(var i = 0; i < this.contents.entries.length; i++) {
-      var entry = this.contents.entries[i];
-      newContents.put(entry.key, entry.value);
+    for(var entry of this.contents.entries()) {
+      newContents.set(entry[0], entry[1]);
     }
-    if(newContents.contains(other.type)) {
-      newContents.put(other.type, newContents.get(other.type) + 1);
+    if(newContents.has(other.type)) {
+      newContents.set(other.type, newContents.get(other.type) + 1);
     } else {
-      newContents.put(other.type, 1);
+      newContents.set(other.type, 1);
     }
 
     var containerType;
