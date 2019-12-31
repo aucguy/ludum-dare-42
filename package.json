@@ -16,12 +16,10 @@
     "url": "https://github.com/aucguy/ludum-dare-42/issues"
   },
   "homepage": "https://github.com/aucguy/ludum-dare-42#readme",
-  "dependencies": {
-    "aucguy-ludum-dare-base": "^1.0.7"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@babel/core": "^7.4.5",
-    "@babel/preset-env": "^7.4.5",
+    "@babel/core": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
     "gulp": "^4.0.2"
   }
 }
