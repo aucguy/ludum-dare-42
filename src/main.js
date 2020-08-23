@@ -7,17 +7,11 @@ function init() {
     width: 640,
     height: 480,
     parent: 'gameContainer',
-    scene: new CustomBootScene()
+    scene: new util.BootScene('play')
   });
   game.scene.add('play', new PlayScene());
   return game;
 }
-
-var CustomBootScene = util.extend(util.BootScene, 'CustomBootScene', {
-  update: function() {
-    this.scene.start('play');
-  }
-});
 
 var World = util.extend(Object, 'World', {
   constructor: function World(scene) {

@@ -95,7 +95,7 @@ var Container = util.extend(Ingredient, 'Container', {
     }
   },
   addIngredient: function(other) {
-    var newContents = new util.Map();
+    var newContents = new Map();
     for(var entry of this.contents.entries()) {
       newContents.set(entry[0], entry[1]);
     }
@@ -249,9 +249,9 @@ function mixContainer(container, other) {
 
 function toCookingIngredient(world, original) {
   if(original.type === INGREDIENT_TYPES.BOWL) {
-    return new Bowl(world, BOWL_TYPES.EMPTY, new util.Map());
+    return new Bowl(world, BOWL_TYPES.EMPTY, new Map());
   } else if(original.type === INGREDIENT_TYPES.POT) {
-    return new Pot(world, POT_TYPES.EMPTY, new util.Map());
+    return new Pot(world, POT_TYPES.EMPTY, new Map());
   } else {
     return new Ingredient(world, original.type);
   }
